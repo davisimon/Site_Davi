@@ -12,7 +12,7 @@
 # For developpers, if you modify this theme, put your images in `source/images` folder and
 # use grunt task `build` to synchronize assets
 
-baseURL = "https://davisimon.github.io/"
+baseURL = "https://davi-simon.netlify.com/"
 languageCode = "en-us"
 defaultContentLanguage = "en-us"
 title = "Davi Simon's blog and site"

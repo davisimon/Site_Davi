@@ -7,3 +7,6 @@ categories: []
 tags: []
 ---
 
+Very useful when your first deployment doesn't work. 
+
+<https://maraaverick.rbind.io/2017/10/updating-blogdown-hugo-version-netlify/>
