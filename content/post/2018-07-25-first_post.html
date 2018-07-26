@@ -1,7 +1,7 @@
 ---
 title: "My first post"
 author: "Davi Souza Simon"
-date: 2018-07-26T21:56:14-05:00
+date: 2018-07-24T12:56:14-05:00
 categories: ["R","Finance","Accounting"]
 tags: ["R Markdown", "About"]
 ---
@@ -62,6 +62,6 @@ tags: ["R Markdown", "About"]
 <pre class="r"><code>
 ggplot(data=RaRb) + geom_point(aes(x=Rb, y=Ra)) + geom_smooth(aes(x=Rb, y=Ra), method=&quot;lm&quot;) + xlab(&quot;IBOVESPA&quot;) + ylab(&quot;PETR4&quot;) + 
   ggtitle(&quot;Beta from daily returns - 3 years from July 20, 2018)&quot;, subtitle = paste(&quot;R(PETR4) = Rf + &quot;,round(coef(summary(lm(Ra~Rb, data=RaRb)))[2,1],2),&quot;(Rm - Rf)&quot;,sep=&quot;&quot;)) + geom_vline(xintercept=0, color = &quot;black&quot;) + geom_hline(yintercept=0, color = &quot;black&quot;) </code></pre>
-<p><img src="/post/2017-07-25-first_post_files/figure-html/Beta-1.png" width="672" /></p>
+<p><img src="/post/2018-07-25-first_post_files/figure-html/Beta-1.png" width="672" /></p>
 </div>
 </div>

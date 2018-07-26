@@ -224,9 +224,9 @@ Why having a website? I have a lot of code and ideas to share. Why now? Had to s
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-07-26T21:56:14-05:00">
+      <time itemprop="datePublished" datetime="2018-07-24T12:56:14-05:00">
         
-  July 26, 2018
+  July 24, 2018
 
       </time>
     
@@ -303,7 +303,7 @@ Why having a website? I have a lot of code and ideas to share. Why now? Had to s
 <pre class="r"><code>
 ggplot(data=RaRb) + geom_point(aes(x=Rb, y=Ra)) + geom_smooth(aes(x=Rb, y=Ra), method=&quot;lm&quot;) + xlab(&quot;IBOVESPA&quot;) + ylab(&quot;PETR4&quot;) + 
   ggtitle(&quot;Beta from daily returns - 3 years from July 20, 2018)&quot;, subtitle = paste(&quot;R(PETR4) = Rf + &quot;,round(coef(summary(lm(Ra~Rb, data=RaRb)))[2,1],2),&quot;(Rm - Rf)&quot;,sep=&quot;&quot;)) + geom_vline(xintercept=0, color = &quot;black&quot;) + geom_hline(yintercept=0, color = &quot;black&quot;) </code></pre>
-<p><img src="/post/2017-07-25-first_post_files/figure-html/Beta-1.png" width="672" /></p>
+<p><img src="/post/2018-07-25-first_post_files/figure-html/Beta-1.png" width="672" /></p>
 </div>
 </div>
 
@@ -333,7 +333,7 @@ ggplot(data=RaRb) + geom_point(aes(x=Rb, y=Ra)) + geom_smooth(aes(x=Rb, y=Ra), m
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/always-remenber-to-read-the-fine-print/" data-tooltip="Always remenber to read the fine print">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -419,7 +419,7 @@ ggplot(data=RaRb) + geom_point(aes(x=Rb, y=Ra)) + geom_smooth(aes(x=Rb, y=Ra), m
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/always-remenber-to-read-the-fine-print/" data-tooltip="Always remenber to read the fine print">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -560,6 +560,24 @@ ggplot(data=RaRb) + geom_point(aes(x=Rb, y=Ra)) + geom_smooth(aes(x=Rb, y=Ra), m
           <div class="media">
             
             <div class="media-body">
+              <a class="link-unstyled" href="/2018/07/always-remenber-to-read-the-fine-print/">
+                <h3 class="media-heading">Always remenber to read the fine print</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jul 7, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Very useful when your first deployment doesn’t work.
+https://maraaverick.rbind.io/2017/10/updating-blogdown-hugo-version-netlify/</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
               <a class="link-unstyled" href="/2018/07/my-first-post/">
                 <h3 class="media-heading">My first post</h3>
               </a>
@@ -582,7 +600,7 @@ Why having a website? I have a lot of code and ideas to share. Why now? Had to s
          data-message-zero="no post found"
          data-message-one="1 post found"
          data-message-other="{n} posts found">
-         1 posts found
+         2 posts found
       </p>
     </div>
   </div>
