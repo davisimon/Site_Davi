@@ -1,0 +1,67 @@
+---
+title: "My first post"
+author: "Davi Souza Simon"
+date: 2018-07-26T21:56:14-05:00
+categories: ["R","Finance","Accounting"]
+tags: ["R Markdown", "About"]
+---
+
+
+
+<div id="first-post" class="section level1">
+<h1>First post</h1>
+<p>First things first.</p>
+<ol style="list-style-type: decimal">
+<li>Why having a website? I have a lot of code and ideas to share.</li>
+<li>Why now? Had to start it at some point.</li>
+<li>What will I blog about? Accounting, Corporate Finance, Governance (Public and Corporate), Pension Funds. R programming Language, Stata, Rmarkdown. Some others things will show up, I suppose.</li>
+<li>Will I update it frequently? Highly likely.</li>
+<li>How did I do it? <a href="https://bookdown.org/yihui/blogdown/" class="uri">https://bookdown.org/yihui/blogdown/</a></li>
+<li>How long did it take? A couple of hours to get it up and running.</li>
+</ol>
+<p>My posts will have code and reproducible examples like this.</p>
+<p>Getting Petrobras’ stock data from <a href="https://finance.yahoo.com/" class="uri">https://finance.yahoo.com/</a> with the tidyquant package <a href="https://cran.r-project.org/web/packages/tidyquant/index.html" class="uri">https://cran.r-project.org/web/packages/tidyquant/index.html</a></p>
+<pre class="r"><code>Ra &lt;- &quot;PETR4.SA&quot; %&gt;%
+  tq_get(get  = &quot;stock.prices&quot;,
+         from = &quot;2015-07-21&quot;,
+         to   = &quot;2018-07-20&quot;) %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn,
+               type       = &quot;log&quot;,
+               period     = &quot;daily&quot;, 
+               col_rename = &quot;Ra&quot;)</code></pre>
+<p>Getting Ibovespa’s returns in the same three year window.</p>
+<pre class="r"><code>Rb &lt;- &quot;^BVSP&quot; %&gt;%
+  tq_get(get  = &quot;stock.prices&quot;,
+         from = &quot;2015-07-21&quot;,
+         to   = &quot;2018-07-20&quot;) %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               type       = &quot;log&quot;,
+               period     = &quot;daily&quot;, 
+               col_rename = &quot;Rb&quot;)
+## Warning in to_period(xx, period = on.opts[[period]], ...): missing values
+## removed from data</code></pre>
+<p>Merging tables.</p>
+<pre class="r"><code>RaRb &lt;- left_join(Ra, Rb, by = c(&quot;date&quot; = &quot;date&quot;))</code></pre>
+<p>Analyzing the variables.</p>
+<pre class="r"><code>summary(RaRb) 
+##       date                  Ra                   Rb           
+##  Min.   :2015-07-21   Min.   :-0.1714899   Min.   :-0.092107  
+##  1st Qu.:2016-04-26   1st Qu.:-0.0176760   1st Qu.:-0.007375  
+##  Median :2017-01-23   Median : 0.0012792   Median : 0.000909  
+##  Mean   :2017-01-21   Mean   : 0.0007198   Mean   : 0.000549  
+##  3rd Qu.:2017-10-20   3rd Qu.: 0.0178110   3rd Qu.: 0.008687  
+##  Max.   :2018-07-19   Max.   : 0.1508583   Max.   : 0.063887  
+##                                            NA&#39;s   :7</code></pre>
+<p>Getting rid of missing data</p>
+<pre class="r"><code>RaRb &lt;- RaRb %&gt;% filter(!is.na(Rb))</code></pre>
+<div id="will-i-post-cool-graphs" class="section level2">
+<h2>Will I post cool graphs?</h2>
+<p>You bet!</p>
+<pre class="r"><code>
+ggplot(data=RaRb) + geom_point(aes(x=Rb, y=Ra)) + geom_smooth(aes(x=Rb, y=Ra), method=&quot;lm&quot;) + xlab(&quot;IBOVESPA&quot;) + ylab(&quot;PETR4&quot;) + 
+  ggtitle(&quot;Beta from daily returns - 3 years from July 20, 2018)&quot;, subtitle = paste(&quot;R(PETR4) = Rf + &quot;,round(coef(summary(lm(Ra~Rb, data=RaRb)))[2,1],2),&quot;(Rm - Rf)&quot;,sep=&quot;&quot;)) + geom_vline(xintercept=0, color = &quot;black&quot;) + geom_hline(yintercept=0, color = &quot;black&quot;) </code></pre>
+<p><img src="/post/2017-07-25-first_post_files/figure-html/Beta-1.png" width="672" /></p>
+</div>
+</div>
