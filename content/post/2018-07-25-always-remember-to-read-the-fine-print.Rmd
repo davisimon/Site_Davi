@@ -1,5 +1,5 @@
 ---
-title: Always remenber to read the fine print
+title: Always remember to read the fine print
 author: Davi Simon
 date: '2018-07-25'
 slug: always-remenber-to-read-the-fine-print
