@@ -1,0 +1,4167 @@
+
+
+  
+    
+  
+
+
+  
+
+
+
+
+  
+
+
+  
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.45.1 with theme Tranquilpeak 0.4.3-BETA">
+    <title>B3 - Stock returns - ongoing project</title>
+    <meta name="author" content="Davi Simon">
+    <meta name="keywords" content="">
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+    <meta name="description" content="We start by defining which tickers are we going to consider in our analysis. The file “tickers.xlsx” has tickers from B3 stocks that were active in the stock exchange as of april 2018.
+Download tickers.xlsx We will read it with the function read_excel, from the amazing readxl package https://readxl.tidyverse.org/
+library(readxl) Brazilian stocks are found in yahoofinance with an added “.SA”. So, we add that suffix to the tickers, creating the codigo column in our tickers dataframe.">
+    <meta property="og:description" content="We start by defining which tickers are we going to consider in our analysis. The file “tickers.xlsx” has tickers from B3 stocks that were active in the stock exchange as of april 2018.
+Download tickers.xlsx We will read it with the function read_excel, from the amazing readxl package https://readxl.tidyverse.org/
+library(readxl) Brazilian stocks are found in yahoofinance with an added “.SA”. So, we add that suffix to the tickers, creating the codigo column in our tickers dataframe.">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="B3 - Stock returns - ongoing project">
+    <meta property="og:url" content="/2018/08/b3-stock-returns-ongoing-project/">
+    <meta property="og:site_name" content="Davi Simon&#39;s blog and site">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Davi Simon&#39;s blog and site">
+    <meta name="twitter:description" content="We start by defining which tickers are we going to consider in our analysis. The file “tickers.xlsx” has tickers from B3 stocks that were active in the stock exchange as of april 2018.
+Download tickers.xlsx We will read it with the function read_excel, from the amazing readxl package https://readxl.tidyverse.org/
+library(readxl) Brazilian stocks are found in yahoofinance with an added “.SA”. So, we add that suffix to the tickers, creating the codigo column in our tickers dataframe.">
+    
+      <meta name="twitter:creator" content="@Davi_simon">
+    
+    
+
+    
+    
+
+    
+      <meta property="og:image" content="//www.gravatar.com/avatar/746a83ace17dffe56417484caa8d9d7d?s=640">
+    
+
+    
+    
+    
+
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-jsjn0006wyhpyzivf6yceb31gvpjatbcs3qzjvlumobfnugccvobqwxnnaj8.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">Davi Simon&#39;s blog and site</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="//www.gravatar.com/avatar/746a83ace17dffe56417484caa8d9d7d?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="//www.gravatar.com/avatar/746a83ace17dffe56417484caa8d9d7d?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Davi Simon</h4>
+        
+          <h5 class="sidebar-profile-bio">Bachelor&rsquo;s degree in Accounting Sciences - UFRGS 2004. Specialist in Finacial, Economic and, Tax Law - UFRGS 2006. Master&rsquo;s Degree in Accounting - UNISINOS 2013. Phd Student at Unisinos</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/mailto:davi.simon.cnh@gmail.com">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-envelope"></i>
+      
+      <span class="sidebar-button-desc">Email</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://twitter.com/Davi_simon">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-twitter"></i>
+      
+      <span class="sidebar-button-desc">Twitter</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/10136213/davi-simon">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+      
+      <span class="sidebar-button-desc">Stack Overflow</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/davisimon">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      B3 - Stock returns - ongoing project
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2018-08-01T00:00:00Z">
+        
+  August 1, 2018
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/finance">Finance</a>, 
+    
+      <a class="category-link" href="/categories/r">R</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<p>We start by defining which tickers are we going to consider in our analysis. The file “tickers.xlsx” has tickers from B3 stocks that were active in the stock exchange as of april 2018.</p>
+<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,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" download="tickers.xlsx">Download tickers.xlsx</a>
+<p>We will read it with the function read_excel, from the amazing readxl package <a href="https://readxl.tidyverse.org/" class="uri">https://readxl.tidyverse.org/</a></p>
+<pre class="r"><code>library(readxl)</code></pre>
+<p>Brazilian stocks are found in <em>yahoofinance</em> with an added “.SA”. So, we add that suffix to the tickers, creating the codigo column in our <em>tickers</em> dataframe.</p>
+<pre class="r"><code>tickers &lt;- read_excel(&quot;tickers.xlsx&quot;, sheet=1, col_names = TRUE)
+tickers$codigo &lt;- paste(tickers$`unique(Dados$Codigo)`,&quot;.SA&quot;,sep=&quot;&quot;)
+lista &lt;- tickers$codigo</code></pre>
+<p>Through tidyquant’s <em>tq_get</em> function <a href="https://cran.r-project.org/web/packages/tidyquant/index.html" class="uri">https://cran.r-project.org/web/packages/tidyquant/index.html</a>, we get daily stock prices from <a href="https://finance.yahoo.com/" class="uri">https://finance.yahoo.com/</a>, for all of our tickers. This may take a while, depending on the quality of your internet connection. In the same block of code, we transform daily prices on adjusted daily log returns. Log returns are defined as follows:</p>
+<p><span class="math display">\[LogReturns = \log(\frac{P_{t}}{P_{t-1}})\]</span></p>
+<pre class="r"><code>library(tidyquant)
+library(dplyr)</code></pre>
+<pre class="r"><code>log_Retornos_diarios &lt;-   lista %&gt;%
+  tq_get(get  = &quot;stock.prices&quot;,
+         from = &quot;2001-01-01&quot;,
+         to   = &quot;2018-07-31&quot;) %&gt;%
+  group_by(symbol) %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;daily&quot;,
+               type = &quot;log&quot;,
+               col_rename = &quot;Ra&quot;)</code></pre>
+<p>Next we get BOVESPA daily log returns, with a similar approach.</p>
+<pre class="r"><code>log_Rb &lt;- &quot;^BVSP&quot; %&gt;%
+  tq_get(get  = &quot;stock.prices&quot;,
+         from = &quot;2001-01-01&quot;,
+         to   = &quot;2018-07-31&quot;) %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;daily&quot;,
+               type = &quot;log&quot;,
+               col_rename = &quot;Rb&quot;)</code></pre>
+<p>Now, considering that some of the possible uses of this dataset are dependent on calculating beta coefficients between the stocks and the index, we add a column containing daily log returns of the index to the object containing daily stock returns. We do that through dplyr::left_join function</p>
+<pre class="r"><code>log_Retornos_diarios_indice &lt;- left_join(log_Retornos_diarios, log_Rb, by = c(&quot;date&quot; = &quot;date&quot;))</code></pre>
+<p>A basic inspection of the data:</p>
+<pre class="r"><code>head(log_Retornos_diarios_indice)
+## # A tibble: 6 x 4
+## # Groups:   symbol [1]
+##   symbol   date             Ra       Rb
+##   &lt;chr&gt;    &lt;date&gt;        &lt;dbl&gt;    &lt;dbl&gt;
+## 1 ABCB4.SA 2007-09-26  0        0.0145 
+## 2 ABCB4.SA 2007-09-27  0        0.0221 
+## 3 ABCB4.SA 2007-09-28  0.0146  -0.00966
+## 4 ABCB4.SA 2007-10-01  0.0108   0.0305 
+## 5 ABCB4.SA 2007-10-02 -0.00143 -0.00519
+## 6 ABCB4.SA 2007-10-03  0       -0.0314</code></pre>
+<p>A few key statistics, per asset:</p>
+<pre class="r"><code>log_Retornos_diarios_indice  %&gt;% 
+      group_by(symbol) %&gt;% 
+      summarise(mean = mean(Ra),
+                sd = sd(Ra))
+## # A tibble: 310 x 3
+##    symbol        mean     sd
+##    &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+##  1 AALR3.SA -0.000913 0.0143
+##  2 ABCB4.SA  0.000302 0.0246
+##  3 ABEV3.SA  0.000964 0.284 
+##  4 ADHM3.SA -0.00278  0.0903
+##  5 AELP3.SA -0.000292 0.167 
+##  6 AFLT3.SA -0.00236  0.252 
+##  7 AGRO3.SA  0.000139 0.0438
+##  8 AHEB3.SA  0.000869 0.260 
+##  9 ALPA4.SA  0.000484 0.0223
+## 10 ALSC3.SA  0.000261 0.0187
+## # ... with 300 more rows</code></pre>
+<p>Key statistics with a much nicer presentation, per asset:</p>
+<pre class="r"><code>log_Retornos_diarios_indice  %&gt;% 
+      group_by(symbol) %&gt;% 
+      summarise(mean = mean(Ra),
+                sd = sd(Ra))%&gt;% 
+  kable() %&gt;% 
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;)) %&gt;% 
+  scroll_box(width = &quot;100%&quot;, height = &quot;200px&quot;)</code></pre>
+<div style="border: 1px solid #ddd; padding: 5px; overflow-y: scroll; height:200px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+symbol
+</th>
+<th style="text-align:right;">
+mean
+</th>
+<th style="text-align:right;">
+sd
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+AALR3.SA
+</td>
+<td style="text-align:right;">
+-0.0009125
+</td>
+<td style="text-align:right;">
+0.0142629
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ABCB4.SA
+</td>
+<td style="text-align:right;">
+0.0003022
+</td>
+<td style="text-align:right;">
+0.0246156
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ABEV3.SA
+</td>
+<td style="text-align:right;">
+0.0009640
+</td>
+<td style="text-align:right;">
+0.2843076
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ADHM3.SA
+</td>
+<td style="text-align:right;">
+-0.0027755
+</td>
+<td style="text-align:right;">
+0.0902758
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AELP3.SA
+</td>
+<td style="text-align:right;">
+-0.0002921
+</td>
+<td style="text-align:right;">
+0.1671208
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AFLT3.SA
+</td>
+<td style="text-align:right;">
+-0.0023618
+</td>
+<td style="text-align:right;">
+0.2515759
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AGRO3.SA
+</td>
+<td style="text-align:right;">
+0.0001389
+</td>
+<td style="text-align:right;">
+0.0438275
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AHEB3.SA
+</td>
+<td style="text-align:right;">
+0.0008691
+</td>
+<td style="text-align:right;">
+0.2603379
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ALPA4.SA
+</td>
+<td style="text-align:right;">
+0.0004841
+</td>
+<td style="text-align:right;">
+0.0223010
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ALSC3.SA
+</td>
+<td style="text-align:right;">
+0.0002615
+</td>
+<td style="text-align:right;">
+0.0187220
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AMAR3.SA
+</td>
+<td style="text-align:right;">
+-0.0002777
+</td>
+<td style="text-align:right;">
+0.0259574
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ANIM3.SA
+</td>
+<td style="text-align:right;">
+-0.0001064
+</td>
+<td style="text-align:right;">
+0.0321457
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+APTI4.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ARZZ3.SA
+</td>
+<td style="text-align:right;">
+0.0004540
+</td>
+<td style="text-align:right;">
+0.0242723
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ATOM3.SA
+</td>
+<td style="text-align:right;">
+-0.0006354
+</td>
+<td style="text-align:right;">
+0.1986510
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AZEV4.SA
+</td>
+<td style="text-align:right;">
+-0.0053877
+</td>
+<td style="text-align:right;">
+0.2244335
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AZUL4.SA
+</td>
+<td style="text-align:right;">
+0.0002500
+</td>
+<td style="text-align:right;">
+0.0233910
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+B3SA3.SA
+</td>
+<td style="text-align:right;">
+0.0005434
+</td>
+<td style="text-align:right;">
+0.0216245
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BAHI3.SA
+</td>
+<td style="text-align:right;">
+-0.0005781
+</td>
+<td style="text-align:right;">
+0.0566147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BALM4.SA
+</td>
+<td style="text-align:right;">
+0.0009102
+</td>
+<td style="text-align:right;">
+0.0570194
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BAUH4.SA
+</td>
+<td style="text-align:right;">
+0.0008252
+</td>
+<td style="text-align:right;">
+0.0530621
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BAZA3.SA
+</td>
+<td style="text-align:right;">
+-0.0001031
+</td>
+<td style="text-align:right;">
+0.0316713
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BBAS3.SA
+</td>
+<td style="text-align:right;">
+0.0007472
+</td>
+<td style="text-align:right;">
+0.0275504
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BBDC4.SA
+</td>
+<td style="text-align:right;">
+0.0002743
+</td>
+<td style="text-align:right;">
+0.0231529
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BBRK3.SA
+</td>
+<td style="text-align:right;">
+-0.0011288
+</td>
+<td style="text-align:right;">
+0.0348251
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BBSE3.SA
+</td>
+<td style="text-align:right;">
+0.0005125
+</td>
+<td style="text-align:right;">
+0.0196643
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BDLL4.SA
+</td>
+<td style="text-align:right;">
+-0.0001857
+</td>
+<td style="text-align:right;">
+0.1324160
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BEEF3.SA
+</td>
+<td style="text-align:right;">
+-0.0003335
+</td>
+<td style="text-align:right;">
+0.0257635
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BEES3.SA
+</td>
+<td style="text-align:right;">
+0.0004369
+</td>
+<td style="text-align:right;">
+0.1587068
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BGIP4.SA
+</td>
+<td style="text-align:right;">
+0.0007986
+</td>
+<td style="text-align:right;">
+0.0327127
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIDI4.SA
+</td>
+<td style="text-align:right;">
+-0.0011037
+</td>
+<td style="text-align:right;">
+0.0275023
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIOM3.SA
+</td>
+<td style="text-align:right;">
+0.0005165
+</td>
+<td style="text-align:right;">
+0.1389008
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BKBR3.SA
+</td>
+<td style="text-align:right;">
+-0.0012195
+</td>
+<td style="text-align:right;">
+0.0167014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BMEB4.SA
+</td>
+<td style="text-align:right;">
+-0.0036095
+</td>
+<td style="text-align:right;">
+0.1586156
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BMIN4.SA
+</td>
+<td style="text-align:right;">
+-0.0007298
+</td>
+<td style="text-align:right;">
+0.0514254
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BMKS3.SA
+</td>
+<td style="text-align:right;">
+0.0002916
+</td>
+<td style="text-align:right;">
+0.3160812
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BNBR3.SA
+</td>
+<td style="text-align:right;">
+0.0001258
+</td>
+<td style="text-align:right;">
+0.0499061
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BOBR4.SA
+</td>
+<td style="text-align:right;">
+-0.0007842
+</td>
+<td style="text-align:right;">
+0.0455807
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BPAN4.SA
+</td>
+<td style="text-align:right;">
+-0.0006220
+</td>
+<td style="text-align:right;">
+0.0296444
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BPAR3.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BPHA3.SA
+</td>
+<td style="text-align:right;">
+-0.0032463
+</td>
+<td style="text-align:right;">
+0.0529010
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRAP4.SA
+</td>
+<td style="text-align:right;">
+0.0004290
+</td>
+<td style="text-align:right;">
+0.0280439
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRDT3.SA
+</td>
+<td style="text-align:right;">
+0.0018266
+</td>
+<td style="text-align:right;">
+0.0255044
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRFS3.SA
+</td>
+<td style="text-align:right;">
+0.0005497
+</td>
+<td style="text-align:right;">
+0.0215655
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRGE8.SA
+</td>
+<td style="text-align:right;">
+-0.0001260
+</td>
+<td style="text-align:right;">
+0.0338934
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRIN3.SA
+</td>
+<td style="text-align:right;">
+-0.0016389
+</td>
+<td style="text-align:right;">
+0.0338662
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRIV4.SA
+</td>
+<td style="text-align:right;">
+0.0000261
+</td>
+<td style="text-align:right;">
+0.0279403
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRKM5.SA
+</td>
+<td style="text-align:right;">
+-0.0023449
+</td>
+<td style="text-align:right;">
+0.4269254
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRML3.SA
+</td>
+<td style="text-align:right;">
+0.0003039
+</td>
+<td style="text-align:right;">
+0.0277549
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRPR3.SA
+</td>
+<td style="text-align:right;">
+0.0001388
+</td>
+<td style="text-align:right;">
+0.0203649
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BRSR6.SA
+</td>
+<td style="text-align:right;">
+0.0003323
+</td>
+<td style="text-align:right;">
+0.0284729
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BSEV3.SA
+</td>
+<td style="text-align:right;">
+-0.0009912
+</td>
+<td style="text-align:right;">
+0.0280407
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BSLI4.SA
+</td>
+<td style="text-align:right;">
+0.0012570
+</td>
+<td style="text-align:right;">
+0.0417929
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BTOW3.SA
+</td>
+<td style="text-align:right;">
+0.0001242
+</td>
+<td style="text-align:right;">
+0.0357259
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BTTL4.SA
+</td>
+<td style="text-align:right;">
+-0.0013950
+</td>
+<td style="text-align:right;">
+0.0462662
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CAMB4.SA
+</td>
+<td style="text-align:right;">
+0.0007531
+</td>
+<td style="text-align:right;">
+0.4005581
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CAML3.SA
+</td>
+<td style="text-align:right;">
+-0.0014745
+</td>
+<td style="text-align:right;">
+0.0197839
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CARD3.SA
+</td>
+<td style="text-align:right;">
+-0.0001932
+</td>
+<td style="text-align:right;">
+0.0293230
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CASN4.SA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CBEE3.SA
+</td>
+<td style="text-align:right;">
+0.0000408
+</td>
+<td style="text-align:right;">
+0.1090604
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CCPR3.SA
+</td>
+<td style="text-align:right;">
+0.0007230
+</td>
+<td style="text-align:right;">
+0.1509651
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CCRO3.SA
+</td>
+<td style="text-align:right;">
+0.0007728
+</td>
+<td style="text-align:right;">
+0.0459740
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CCXC3.SA
+</td>
+<td style="text-align:right;">
+-0.0034418
+</td>
+<td style="text-align:right;">
+0.0672490
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CEBR6.SA
+</td>
+<td style="text-align:right;">
+0.0000133
+</td>
+<td style="text-align:right;">
+0.0409650
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CEDO4.SA
+</td>
+<td style="text-align:right;">
+-0.0003043
+</td>
+<td style="text-align:right;">
+0.0553671
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CEEB3.SA
+</td>
+<td style="text-align:right;">
+0.0002794
+</td>
+<td style="text-align:right;">
+0.0230428
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CEED4.SA
+</td>
+<td style="text-align:right;">
+-0.0018681
+</td>
+<td style="text-align:right;">
+0.0399021
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CEGR3.SA
+</td>
+<td style="text-align:right;">
+-0.0013245
+</td>
+<td style="text-align:right;">
+0.4135399
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CELP3.SA
+</td>
+<td style="text-align:right;">
+-0.0034478
+</td>
+<td style="text-align:right;">
+0.2714969
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CEPE5.SA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CESP6.SA
+</td>
+<td style="text-align:right;">
+0.0001110
+</td>
+<td style="text-align:right;">
+1.0933534
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CGAS5.SA
+</td>
+<td style="text-align:right;">
+0.0005510
+</td>
+<td style="text-align:right;">
+0.0204180
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CGRA4.SA
+</td>
+<td style="text-align:right;">
+0.0006940
+</td>
+<td style="text-align:right;">
+0.0469615
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CIEL3.SA
+</td>
+<td style="text-align:right;">
+0.0006898
+</td>
+<td style="text-align:right;">
+0.0195819
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CLSC4.SA
+</td>
+<td style="text-align:right;">
+0.0000778
+</td>
+<td style="text-align:right;">
+0.0225475
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CMIG4.SA
+</td>
+<td style="text-align:right;">
+-0.0014605
+</td>
+<td style="text-align:right;">
+1.0066459
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+COCE5.SA
+</td>
+<td style="text-align:right;">
+0.0004391
+</td>
+<td style="text-align:right;">
+0.0414122
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CORR4.SA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CPFE3.SA
+</td>
+<td style="text-align:right;">
+0.0009917
+</td>
+<td style="text-align:right;">
+0.0665881
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CPLE6.SA
+</td>
+<td style="text-align:right;">
+0.0001815
+</td>
+<td style="text-align:right;">
+0.0250181
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CPRE3.SA
+</td>
+<td style="text-align:right;">
+0.0002423
+</td>
+<td style="text-align:right;">
+0.0145623
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CRDE3.SA
+</td>
+<td style="text-align:right;">
+-0.0010212
+</td>
+<td style="text-align:right;">
+0.0368771
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CREM3.SA
+</td>
+<td style="text-align:right;">
+-0.0001478
+</td>
+<td style="text-align:right;">
+0.0788132
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CRFB3.SA
+</td>
+<td style="text-align:right;">
+0.0001018
+</td>
+<td style="text-align:right;">
+0.0178192
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CRIV4.SA
+</td>
+<td style="text-align:right;">
+0.0003438
+</td>
+<td style="text-align:right;">
+0.0233107
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CRPG5.SA
+</td>
+<td style="text-align:right;">
+-0.0014012
+</td>
+<td style="text-align:right;">
+0.2214155
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CSAB3.SA
+</td>
+<td style="text-align:right;">
+0.0010242
+</td>
+<td style="text-align:right;">
+0.0990085
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CSAN3.SA
+</td>
+<td style="text-align:right;">
+0.0003715
+</td>
+<td style="text-align:right;">
+0.0273455
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CSMG3.SA
+</td>
+<td style="text-align:right;">
+0.0002484
+</td>
+<td style="text-align:right;">
+0.0247697
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CSNA3.SA
+</td>
+<td style="text-align:right;">
+0.0003374
+</td>
+<td style="text-align:right;">
+0.0332240
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CSRN6.SA
+</td>
+<td style="text-align:right;">
+0.0009011
+</td>
+<td style="text-align:right;">
+0.0273358
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CTKA4.SA
+</td>
+<td style="text-align:right;">
+-0.0016418
+</td>
+<td style="text-align:right;">
+1.2083925
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CTNM4.SA
+</td>
+<td style="text-align:right;">
+-0.0003103
+</td>
+<td style="text-align:right;">
+0.2397344
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CTSA3.SA
+</td>
+<td style="text-align:right;">
+0.0005109
+</td>
+<td style="text-align:right;">
+0.0748355
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CVCB3.SA
+</td>
+<td style="text-align:right;">
+0.0010145
+</td>
+<td style="text-align:right;">
+0.0216209
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CYRE3.SA
+</td>
+<td style="text-align:right;">
+0.0006796
+</td>
+<td style="text-align:right;">
+0.0307382
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CZLT33.SA
+</td>
+<td style="text-align:right;">
+0.0001794
+</td>
+<td style="text-align:right;">
+0.0828901
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DAGB33.SA
+</td>
+<td style="text-align:right;">
+0.0005942
+</td>
+<td style="text-align:right;">
+0.0184979
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DASA3.SA
+</td>
+<td style="text-align:right;">
+0.0004775
+</td>
+<td style="text-align:right;">
+0.0248420
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DIRR3.SA
+</td>
+<td style="text-align:right;">
+-0.0000629
+</td>
+<td style="text-align:right;">
+0.0237412
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DMMO3.SA
+</td>
+<td style="text-align:right;">
+-0.0000639
+</td>
+<td style="text-align:right;">
+0.1257796
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DOHL4.SA
+</td>
+<td style="text-align:right;">
+0.0004616
+</td>
+<td style="text-align:right;">
+0.2349315
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DTCY3.SA
+</td>
+<td style="text-align:right;">
+-0.0004628
+</td>
+<td style="text-align:right;">
+0.1418873
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DTEX3.SA
+</td>
+<td style="text-align:right;">
+0.0001427
+</td>
+<td style="text-align:right;">
+0.0261505
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EALT4.SA
+</td>
+<td style="text-align:right;">
+0.0025935
+</td>
+<td style="text-align:right;">
+0.7122960
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ECOR3.SA
+</td>
+<td style="text-align:right;">
+0.0001275
+</td>
+<td style="text-align:right;">
+0.0220724
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ECPR4.SA
+</td>
+<td style="text-align:right;">
+0.0009811
+</td>
+<td style="text-align:right;">
+0.0842159
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EEEL3.SA
+</td>
+<td style="text-align:right;">
+0.0001990
+</td>
+<td style="text-align:right;">
+0.0450381
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EGIE3.SA
+</td>
+<td style="text-align:right;">
+0.0006620
+</td>
+<td style="text-align:right;">
+0.0228042
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EKTR4.SA
+</td>
+<td style="text-align:right;">
+0.0002141
+</td>
+<td style="text-align:right;">
+0.1448914
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ELEK4.SA
+</td>
+<td style="text-align:right;">
+-0.0000945
+</td>
+<td style="text-align:right;">
+0.2492359
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ELET3.SA
+</td>
+<td style="text-align:right;">
+0.0000755
+</td>
+<td style="text-align:right;">
+0.0312666
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ELPL3.SA
+</td>
+<td style="text-align:right;">
+-0.0026190
+</td>
+<td style="text-align:right;">
+1.5642765
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EMAE4.SA
+</td>
+<td style="text-align:right;">
+0.0002402
+</td>
+<td style="text-align:right;">
+0.0330669
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EMBR3.SA
+</td>
+<td style="text-align:right;">
+0.0001580
+</td>
+<td style="text-align:right;">
+0.0241069
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ENBR3.SA
+</td>
+<td style="text-align:right;">
+0.0006100
+</td>
+<td style="text-align:right;">
+0.0745101
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ENEV3.SA
+</td>
+<td style="text-align:right;">
+-0.0015338
+</td>
+<td style="text-align:right;">
+0.0406911
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ENGI11.SA
+</td>
+<td style="text-align:right;">
+0.0004629
+</td>
+<td style="text-align:right;">
+0.0239529
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ENMA3B.SA
+</td>
+<td style="text-align:right;">
+0.0009442
+</td>
+<td style="text-align:right;">
+0.0220760
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ENMT3.SA
+</td>
+<td style="text-align:right;">
+0.0007044
+</td>
+<td style="text-align:right;">
+0.1009380
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EQTL3.SA
+</td>
+<td style="text-align:right;">
+0.0006999
+</td>
+<td style="text-align:right;">
+0.0203144
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ESTC3.SA
+</td>
+<td style="text-align:right;">
+0.0006404
+</td>
+<td style="text-align:right;">
+0.0278649
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ETER3.SA
+</td>
+<td style="text-align:right;">
+-0.0000231
+</td>
+<td style="text-align:right;">
+0.1352708
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EUCA4.SA
+</td>
+<td style="text-align:right;">
+0.0000945
+</td>
+<td style="text-align:right;">
+0.0880700
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EVEN3.SA
+</td>
+<td style="text-align:right;">
+-0.0002543
+</td>
+<td style="text-align:right;">
+0.0287959
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+EZTC3.SA
+</td>
+<td style="text-align:right;">
+0.0004328
+</td>
+<td style="text-align:right;">
+0.0250185
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FBMC4.SA
+</td>
+<td style="text-align:right;">
+-0.0018834
+</td>
+<td style="text-align:right;">
+1.2964222
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FESA4.SA
+</td>
+<td style="text-align:right;">
+0.0008410
+</td>
+<td style="text-align:right;">
+0.0282943
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FHER3.SA
+</td>
+<td style="text-align:right;">
+-0.0002544
+</td>
+<td style="text-align:right;">
+0.0359274
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FIBR3.SA
+</td>
+<td style="text-align:right;">
+0.0003329
+</td>
+<td style="text-align:right;">
+0.0200097
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FIGE3.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FJTA4.SA
+</td>
+<td style="text-align:right;">
+-0.0000735
+</td>
+<td style="text-align:right;">
+0.0948540
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FLRY3.SA
+</td>
+<td style="text-align:right;">
+0.0007261
+</td>
+<td style="text-align:right;">
+0.0188418
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FRAS3.SA
+</td>
+<td style="text-align:right;">
+0.0002681
+</td>
+<td style="text-align:right;">
+0.0522065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FRIO3.SA
+</td>
+<td style="text-align:right;">
+-0.0009331
+</td>
+<td style="text-align:right;">
+0.0559105
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+FRTA3.SA
+</td>
+<td style="text-align:right;">
+-0.0008383
+</td>
+<td style="text-align:right;">
+0.0631079
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GBIO33.SA
+</td>
+<td style="text-align:right;">
+-0.0042588
+</td>
+<td style="text-align:right;">
+0.0221662
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GEPA4.SA
+</td>
+<td style="text-align:right;">
+0.0006135
+</td>
+<td style="text-align:right;">
+0.0681279
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GFSA3.SA
+</td>
+<td style="text-align:right;">
+0.0014867
+</td>
+<td style="text-align:right;">
+0.1083509
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GGBR4.SA
+</td>
+<td style="text-align:right;">
+0.0006521
+</td>
+<td style="text-align:right;">
+0.0282484
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GNDI3.SA
+</td>
+<td style="text-align:right;">
+0.0027019
+</td>
+<td style="text-align:right;">
+0.0175778
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GOAU4.SA
+</td>
+<td style="text-align:right;">
+0.0005221
+</td>
+<td style="text-align:right;">
+0.0288707
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GOLL4.SA
+</td>
+<td style="text-align:right;">
+-0.0001695
+</td>
+<td style="text-align:right;">
+0.0376809
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GPAR3.SA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GPCP3.SA
+</td>
+<td style="text-align:right;">
+-0.0002086
+</td>
+<td style="text-align:right;">
+0.1638333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GPIV33.SA
+</td>
+<td style="text-align:right;">
+-0.0001754
+</td>
+<td style="text-align:right;">
+0.0266020
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GRND3.SA
+</td>
+<td style="text-align:right;">
+0.0009390
+</td>
+<td style="text-align:right;">
+0.0347284
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GSHP3.SA
+</td>
+<td style="text-align:right;">
+-0.0004774
+</td>
+<td style="text-align:right;">
+0.0404765
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+GUAR3.SA
+</td>
+<td style="text-align:right;">
+0.0007448
+</td>
+<td style="text-align:right;">
+0.0568420
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HAGA4.SA
+</td>
+<td style="text-align:right;">
+0.0014534
+</td>
+<td style="text-align:right;">
+0.1510657
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HAPV3.SA
+</td>
+<td style="text-align:right;">
+-0.0007424
+</td>
+<td style="text-align:right;">
+0.0258321
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HBOR3.SA
+</td>
+<td style="text-align:right;">
+-0.0000127
+</td>
+<td style="text-align:right;">
+0.0287116
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HBTS5.SA
+</td>
+<td style="text-align:right;">
+0.0003303
+</td>
+<td style="text-align:right;">
+0.0522127
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HETA3.SA
+</td>
+<td style="text-align:right;">
+-0.0006256
+</td>
+<td style="text-align:right;">
+0.0550181
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HGTX3.SA
+</td>
+<td style="text-align:right;">
+-0.0031659
+</td>
+<td style="text-align:right;">
+0.4281196
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HOOT4.SA
+</td>
+<td style="text-align:right;">
+-0.0013589
+</td>
+<td style="text-align:right;">
+0.1602503
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HYPE3.SA
+</td>
+<td style="text-align:right;">
+0.0005102
+</td>
+<td style="text-align:right;">
+0.0238404
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IDNT3.SA
+</td>
+<td style="text-align:right;">
+-0.0003260
+</td>
+<td style="text-align:right;">
+0.3292065
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IDVL4.SA
+</td>
+<td style="text-align:right;">
+-0.0011448
+</td>
+<td style="text-align:right;">
+0.0342652
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IGBR3.SA
+</td>
+<td style="text-align:right;">
+-0.0000457
+</td>
+<td style="text-align:right;">
+0.1745242
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IGTA3.SA
+</td>
+<td style="text-align:right;">
+0.0003366
+</td>
+<td style="text-align:right;">
+0.0207903
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+INEP4.SA
+</td>
+<td style="text-align:right;">
+-0.0005702
+</td>
+<td style="text-align:right;">
+0.2365421
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IRBR3.SA
+</td>
+<td style="text-align:right;">
+0.0025107
+</td>
+<td style="text-align:right;">
+0.0142059
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ITEC3.SA
+</td>
+<td style="text-align:right;">
+-0.0018398
+</td>
+<td style="text-align:right;">
+0.3019437
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ITSA4.SA
+</td>
+<td style="text-align:right;">
+0.0006418
+</td>
+<td style="text-align:right;">
+0.0291393
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ITUB4.SA
+</td>
+<td style="text-align:right;">
+0.0005873
+</td>
+<td style="text-align:right;">
+0.0226930
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JBDU4.SA
+</td>
+<td style="text-align:right;">
+-0.0016984
+</td>
+<td style="text-align:right;">
+0.1760495
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JBSS3.SA
+</td>
+<td style="text-align:right;">
+0.0001362
+</td>
+<td style="text-align:right;">
+0.0336486
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JFEN3.SA
+</td>
+<td style="text-align:right;">
+0.0007283
+</td>
+<td style="text-align:right;">
+0.8352816
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JHSF3.SA
+</td>
+<td style="text-align:right;">
+-0.0006414
+</td>
+<td style="text-align:right;">
+0.0319848
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JOPA3.SA
+</td>
+<td style="text-align:right;">
+0.0003652
+</td>
+<td style="text-align:right;">
+0.0560428
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JPSA3.SA
+</td>
+<td style="text-align:right;">
+0.0005157
+</td>
+<td style="text-align:right;">
+0.1270051
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+JSLG3.SA
+</td>
+<td style="text-align:right;">
+-0.0002332
+</td>
+<td style="text-align:right;">
+0.0229995
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KEPL3.SA
+</td>
+<td style="text-align:right;">
+-0.0003447
+</td>
+<td style="text-align:right;">
+0.0740820
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KROT3.SA
+</td>
+<td style="text-align:right;">
+0.0010755
+</td>
+<td style="text-align:right;">
+0.0338381
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LAME4.SA
+</td>
+<td style="text-align:right;">
+-0.0005765
+</td>
+<td style="text-align:right;">
+0.1122362
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LCAM3.SA
+</td>
+<td style="text-align:right;">
+0.0009389
+</td>
+<td style="text-align:right;">
+0.0256986
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LEVE3.SA
+</td>
+<td style="text-align:right;">
+0.0008230
+</td>
+<td style="text-align:right;">
+0.0640903
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LHER4.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LIGT3.SA
+</td>
+<td style="text-align:right;">
+-0.0003179
+</td>
+<td style="text-align:right;">
+0.0296429
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LINX3.SA
+</td>
+<td style="text-align:right;">
+0.0004871
+</td>
+<td style="text-align:right;">
+0.0189792
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LIPR3.SA
+</td>
+<td style="text-align:right;">
+0.0007147
+</td>
+<td style="text-align:right;">
+0.0416780
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LIQO3.SA
+</td>
+<td style="text-align:right;">
+-0.0020156
+</td>
+<td style="text-align:right;">
+0.5996488
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LLIS3.SA
+</td>
+<td style="text-align:right;">
+0.0003192
+</td>
+<td style="text-align:right;">
+0.0389736
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LOGN3.SA
+</td>
+<td style="text-align:right;">
+-0.0011297
+</td>
+<td style="text-align:right;">
+0.0342853
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LPSB3.SA
+</td>
+<td style="text-align:right;">
+-0.0003966
+</td>
+<td style="text-align:right;">
+0.0292226
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LREN3.SA
+</td>
+<td style="text-align:right;">
+-0.0011077
+</td>
+<td style="text-align:right;">
+0.1346187
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LUPA3.SA
+</td>
+<td style="text-align:right;">
+-0.0026190
+</td>
+<td style="text-align:right;">
+0.0753927
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+LUXM4.SA
+</td>
+<td style="text-align:right;">
+-0.0016144
+</td>
+<td style="text-align:right;">
+0.0073979
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MAGG3.SA
+</td>
+<td style="text-align:right;">
+0.0001396
+</td>
+<td style="text-align:right;">
+0.0245482
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MDIA3.SA
+</td>
+<td style="text-align:right;">
+0.0006875
+</td>
+<td style="text-align:right;">
+0.0197358
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MEAL3.SA
+</td>
+<td style="text-align:right;">
+-0.0003193
+</td>
+<td style="text-align:right;">
+0.0242124
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MEND5.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MERC4.SA
+</td>
+<td style="text-align:right;">
+-0.0023238
+</td>
+<td style="text-align:right;">
+0.0823118
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MGEL4.SA
+</td>
+<td style="text-align:right;">
+-0.0000234
+</td>
+<td style="text-align:right;">
+0.0684740
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MGLU3.SA
+</td>
+<td style="text-align:right;">
+0.0012058
+</td>
+<td style="text-align:right;">
+0.0375380
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MILS3.SA
+</td>
+<td style="text-align:right;">
+-0.0007763
+</td>
+<td style="text-align:right;">
+0.0306243
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MMAQ4.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MMXM3.SA
+</td>
+<td style="text-align:right;">
+0.0030794
+</td>
+<td style="text-align:right;">
+0.8751874
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MNDL3.SA
+</td>
+<td style="text-align:right;">
+-0.0000322
+</td>
+<td style="text-align:right;">
+0.0868712
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MNPR3.SA
+</td>
+<td style="text-align:right;">
+-0.0032940
+</td>
+<td style="text-align:right;">
+0.4954571
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MOAR3.SA
+</td>
+<td style="text-align:right;">
+0.0007985
+</td>
+<td style="text-align:right;">
+0.0997901
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MOVI3.SA
+</td>
+<td style="text-align:right;">
+-0.0012748
+</td>
+<td style="text-align:right;">
+0.0233335
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MPLU3.SA
+</td>
+<td style="text-align:right;">
+0.0004872
+</td>
+<td style="text-align:right;">
+0.0222139
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MRFG3.SA
+</td>
+<td style="text-align:right;">
+-0.0002890
+</td>
+<td style="text-align:right;">
+0.0305386
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MRSA6B.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MRVE3.SA
+</td>
+<td style="text-align:right;">
+0.0002250
+</td>
+<td style="text-align:right;">
+0.0326540
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MSPA3.SA
+</td>
+<td style="text-align:right;">
+0.0009729
+</td>
+<td style="text-align:right;">
+0.0876678
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MTIG4.SA
+</td>
+<td style="text-align:right;">
+-0.0014401
+</td>
+<td style="text-align:right;">
+0.0614069
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MTSA4.SA
+</td>
+<td style="text-align:right;">
+-0.0001711
+</td>
+<td style="text-align:right;">
+0.0456864
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MULT3.SA
+</td>
+<td style="text-align:right;">
+0.0005047
+</td>
+<td style="text-align:right;">
+0.0375178
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MWET4.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.2208188
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MYPK3.SA
+</td>
+<td style="text-align:right;">
+0.0008339
+</td>
+<td style="text-align:right;">
+0.0524969
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NAFG3.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NATU3.SA
+</td>
+<td style="text-align:right;">
+0.0004666
+</td>
+<td style="text-align:right;">
+0.0231480
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NORD3.SA
+</td>
+<td style="text-align:right;">
+-0.0017718
+</td>
+<td style="text-align:right;">
+0.1253894
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ODER4.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ODPV3.SA
+</td>
+<td style="text-align:right;">
+0.0010001
+</td>
+<td style="text-align:right;">
+0.0263853
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OFSA3.SA
+</td>
+<td style="text-align:right;">
+-0.0001663
+</td>
+<td style="text-align:right;">
+0.0214778
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OGXP3.SA
+</td>
+<td style="text-align:right;">
+-0.0018848
+</td>
+<td style="text-align:right;">
+0.1935973
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OIBR3.SA
+</td>
+<td style="text-align:right;">
+-0.0008332
+</td>
+<td style="text-align:right;">
+1.4949039
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OMGE3.SA
+</td>
+<td style="text-align:right;">
+-0.0000923
+</td>
+<td style="text-align:right;">
+0.0130740
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+OSXB3.SA
+</td>
+<td style="text-align:right;">
+-0.0029449
+</td>
+<td style="text-align:right;">
+0.0542601
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PARD3.SA
+</td>
+<td style="text-align:right;">
+-0.0008474
+</td>
+<td style="text-align:right;">
+0.0210488
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PATI4.SA
+</td>
+<td style="text-align:right;">
+0.0014004
+</td>
+<td style="text-align:right;">
+0.0383181
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PCAR4.SA
+</td>
+<td style="text-align:right;">
+0.0003973
+</td>
+<td style="text-align:right;">
+0.0209990
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PDGR3.SA
+</td>
+<td style="text-align:right;">
+-0.0018265
+</td>
+<td style="text-align:right;">
+0.0446164
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PEAB4.SA
+</td>
+<td style="text-align:right;">
+0.0007240
+</td>
+<td style="text-align:right;">
+0.0277102
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PETR4.SA
+</td>
+<td style="text-align:right;">
+0.0003510
+</td>
+<td style="text-align:right;">
+0.0265345
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PFRM3.SA
+</td>
+<td style="text-align:right;">
+-0.0004790
+</td>
+<td style="text-align:right;">
+0.0279147
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PINE4.SA
+</td>
+<td style="text-align:right;">
+-0.0004375
+</td>
+<td style="text-align:right;">
+0.0239078
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PLAS3.SA
+</td>
+<td style="text-align:right;">
+-0.0002916
+</td>
+<td style="text-align:right;">
+0.1296910
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PMAM3.SA
+</td>
+<td style="text-align:right;">
+-0.0001860
+</td>
+<td style="text-align:right;">
+0.0340583
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PNVL3.SA
+</td>
+<td style="text-align:right;">
+0.0008860
+</td>
+<td style="text-align:right;">
+0.1985267
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+POMO4.SA
+</td>
+<td style="text-align:right;">
+0.0006828
+</td>
+<td style="text-align:right;">
+0.0785744
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+POSI3.SA
+</td>
+<td style="text-align:right;">
+-0.0006803
+</td>
+<td style="text-align:right;">
+0.0358199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PPAR3.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PRIO3.SA
+</td>
+<td style="text-align:right;">
+-0.0014033
+</td>
+<td style="text-align:right;">
+0.0491372
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PSSA3.SA
+</td>
+<td style="text-align:right;">
+0.0006782
+</td>
+<td style="text-align:right;">
+0.0196148
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PTBL3.SA
+</td>
+<td style="text-align:right;">
+0.0005531
+</td>
+<td style="text-align:right;">
+0.2025336
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PTNT4.SA
+</td>
+<td style="text-align:right;">
+0.0001877
+</td>
+<td style="text-align:right;">
+0.0386104
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+QGEP3.SA
+</td>
+<td style="text-align:right;">
+0.0000257
+</td>
+<td style="text-align:right;">
+0.0285995
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+QUAL3.SA
+</td>
+<td style="text-align:right;">
+0.0003334
+</td>
+<td style="text-align:right;">
+0.0236847
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RADL3.SA
+</td>
+<td style="text-align:right;">
+0.0014387
+</td>
+<td style="text-align:right;">
+0.0237499
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RAIL3.SA
+</td>
+<td style="text-align:right;">
+0.0001732
+</td>
+<td style="text-align:right;">
+0.0407250
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RANI3.SA
+</td>
+<td style="text-align:right;">
+0.0011032
+</td>
+<td style="text-align:right;">
+0.2057895
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RAPT4.SA
+</td>
+<td style="text-align:right;">
+0.0008364
+</td>
+<td style="text-align:right;">
+0.0290676
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RCSL4.SA
+</td>
+<td style="text-align:right;">
+-0.0023730
+</td>
+<td style="text-align:right;">
+1.3834568
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RDNI3.SA
+</td>
+<td style="text-align:right;">
+-0.0005787
+</td>
+<td style="text-align:right;">
+0.0263835
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+REDE3.SA
+</td>
+<td style="text-align:right;">
+0.0005422
+</td>
+<td style="text-align:right;">
+0.0697729
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RENT3.SA
+</td>
+<td style="text-align:right;">
+0.0010783
+</td>
+<td style="text-align:right;">
+0.0374061
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RLOG3.SA
+</td>
+<td style="text-align:right;">
+-0.0004957
+</td>
+<td style="text-align:right;">
+0.0345898
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ROMI3.SA
+</td>
+<td style="text-align:right;">
+0.0005644
+</td>
+<td style="text-align:right;">
+0.1889181
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RPAD6.SA
+</td>
+<td style="text-align:right;">
+0.0001703
+</td>
+<td style="text-align:right;">
+0.0528055
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RPMG3.SA
+</td>
+<td style="text-align:right;">
+-0.0005503
+</td>
+<td style="text-align:right;">
+0.0654488
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RSID3.SA
+</td>
+<td style="text-align:right;">
+-0.0005702
+</td>
+<td style="text-align:right;">
+0.0700279
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RSUL4.SA
+</td>
+<td style="text-align:right;">
+-0.0009287
+</td>
+<td style="text-align:right;">
+0.4830440
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SANB11.SA
+</td>
+<td style="text-align:right;">
+0.0003563
+</td>
+<td style="text-align:right;">
+0.0213446
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SBSP3.SA
+</td>
+<td style="text-align:right;">
+-0.0024794
+</td>
+<td style="text-align:right;">
+2.6228409
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SCAR3.SA
+</td>
+<td style="text-align:right;">
+0.0004868
+</td>
+<td style="text-align:right;">
+0.4919983
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SEDU3.SA
+</td>
+<td style="text-align:right;">
+0.0005243
+</td>
+<td style="text-align:right;">
+0.0312521
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SEER3.SA
+</td>
+<td style="text-align:right;">
+0.0001159
+</td>
+<td style="text-align:right;">
+0.0320346
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SGPS3.SA
+</td>
+<td style="text-align:right;">
+-0.0008302
+</td>
+<td style="text-align:right;">
+0.0340054
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SHOW3.SA
+</td>
+<td style="text-align:right;">
+-0.0002680
+</td>
+<td style="text-align:right;">
+0.0285807
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SHUL4.SA
+</td>
+<td style="text-align:right;">
+0.0008997
+</td>
+<td style="text-align:right;">
+0.2843964
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SLCE3.SA
+</td>
+<td style="text-align:right;">
+0.0006049
+</td>
+<td style="text-align:right;">
+0.0276977
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SLED4.SA
+</td>
+<td style="text-align:right;">
+-0.0001650
+</td>
+<td style="text-align:right;">
+0.0353327
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SMLS3.SA
+</td>
+<td style="text-align:right;">
+0.0010149
+</td>
+<td style="text-align:right;">
+0.0254219
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SMTO3.SA
+</td>
+<td style="text-align:right;">
+0.0004235
+</td>
+<td style="text-align:right;">
+0.0253720
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SNSL3.SA
+</td>
+<td style="text-align:right;">
+0.0006417
+</td>
+<td style="text-align:right;">
+0.0241895
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SNSY5.SA
+</td>
+<td style="text-align:right;">
+-0.0000340
+</td>
+<td style="text-align:right;">
+0.1551819
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SOND5.SA
+</td>
+<td style="text-align:right;">
+0.0005552
+</td>
+<td style="text-align:right;">
+0.0560602
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SPRI3.SA
+</td>
+<td style="text-align:right;">
+-0.0002569
+</td>
+<td style="text-align:right;">
+0.0664609
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SPRT3B.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SSBR3.SA
+</td>
+<td style="text-align:right;">
+0.0001034
+</td>
+<td style="text-align:right;">
+0.0178759
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+STBP3.SA
+</td>
+<td style="text-align:right;">
+0.0009906
+</td>
+<td style="text-align:right;">
+0.0300942
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SULA11.SA
+</td>
+<td style="text-align:right;">
+0.0006773
+</td>
+<td style="text-align:right;">
+0.0226568
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SUZB3.SA
+</td>
+<td style="text-align:right;">
+0.0007598
+</td>
+<td style="text-align:right;">
+0.0125671
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TCNO4.SA
+</td>
+<td style="text-align:right;">
+-0.0003951
+</td>
+<td style="text-align:right;">
+0.8424241
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TCSA3.SA
+</td>
+<td style="text-align:right;">
+-0.0006572
+</td>
+<td style="text-align:right;">
+0.0293310
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TECN3.SA
+</td>
+<td style="text-align:right;">
+-0.0011139
+</td>
+<td style="text-align:right;">
+0.0263383
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TEKA4.SA
+</td>
+<td style="text-align:right;">
+-0.0005590
+</td>
+<td style="text-align:right;">
+0.1796428
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TELB4.SA
+</td>
+<td style="text-align:right;">
+-0.0005453
+</td>
+<td style="text-align:right;">
+0.0664033
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TEND3.SA
+</td>
+<td style="text-align:right;">
+0.0019473
+</td>
+<td style="text-align:right;">
+0.0185340
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TESA3.SA
+</td>
+<td style="text-align:right;">
+-0.0019986
+</td>
+<td style="text-align:right;">
+0.0380373
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TGMA3.SA
+</td>
+<td style="text-align:right;">
+-0.0000342
+</td>
+<td style="text-align:right;">
+0.0269819
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TIMP3.SA
+</td>
+<td style="text-align:right;">
+0.0004317
+</td>
+<td style="text-align:right;">
+1.0365159
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TKNO4.SA
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TOTS3.SA
+</td>
+<td style="text-align:right;">
+0.0006690
+</td>
+<td style="text-align:right;">
+0.0218719
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TOYB4.SA
+</td>
+<td style="text-align:right;">
+-0.0008258
+</td>
+<td style="text-align:right;">
+0.3349537
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TPIS3.SA
+</td>
+<td style="text-align:right;">
+-0.0004975
+</td>
+<td style="text-align:right;">
+0.0346290
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TRIS3.SA
+</td>
+<td style="text-align:right;">
+-0.0000613
+</td>
+<td style="text-align:right;">
+0.0978564
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TRPL4.SA
+</td>
+<td style="text-align:right;">
+-0.0009491
+</td>
+<td style="text-align:right;">
+0.9557834
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TRPN3.SA
+</td>
+<td style="text-align:right;">
+0.0002871
+</td>
+<td style="text-align:right;">
+0.2015251
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TUPY3.SA
+</td>
+<td style="text-align:right;">
+-0.0012208
+</td>
+<td style="text-align:right;">
+2.3514550
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TXRX4.SA
+</td>
+<td style="text-align:right;">
+-0.0008610
+</td>
+<td style="text-align:right;">
+0.0783108
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UCAS3.SA
+</td>
+<td style="text-align:right;">
+-0.0010708
+</td>
+<td style="text-align:right;">
+0.0292705
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UGPA3.SA
+</td>
+<td style="text-align:right;">
+-0.0044310
+</td>
+<td style="text-align:right;">
+0.2873901
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+UNIP6.SA
+</td>
+<td style="text-align:right;">
+0.0006627
+</td>
+<td style="text-align:right;">
+0.0238717
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+USIM5.SA
+</td>
+<td style="text-align:right;">
+0.0003773
+</td>
+<td style="text-align:right;">
+0.0338806
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+VALE3.SA
+</td>
+<td style="text-align:right;">
+0.0007034
+</td>
+<td style="text-align:right;">
+0.0256209
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+VIVR3.SA
+</td>
+<td style="text-align:right;">
+-0.0031260
+</td>
+<td style="text-align:right;">
+0.0751387
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+VIVT4.SA
+</td>
+<td style="text-align:right;">
+0.0002655
+</td>
+<td style="text-align:right;">
+0.0189296
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+VLID3.SA
+</td>
+<td style="text-align:right;">
+0.0001503
+</td>
+<td style="text-align:right;">
+0.0200039
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+VULC3.SA
+</td>
+<td style="text-align:right;">
+-0.0015307
+</td>
+<td style="text-align:right;">
+0.2418923
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WEGE3.SA
+</td>
+<td style="text-align:right;">
+0.0009791
+</td>
+<td style="text-align:right;">
+0.0530237
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WHRL3.SA
+</td>
+<td style="text-align:right;">
+0.0007305
+</td>
+<td style="text-align:right;">
+0.1125466
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WIZS3.SA
+</td>
+<td style="text-align:right;">
+-0.0005257
+</td>
+<td style="text-align:right;">
+0.0260816
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WLMM4.SA
+</td>
+<td style="text-align:right;">
+-0.0011623
+</td>
+<td style="text-align:right;">
+0.4934800
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+WSON33.SA
+</td>
+<td style="text-align:right;">
+0.0003468
+</td>
+<td style="text-align:right;">
+0.0198706
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Since it took a while to get data from the web, why not saving our resulting object?</p>
+<pre class="r"><code>saveRDS(log_Retornos_diarios_indice, &quot;log_Retornos_diarios_indice.rds&quot;)</code></pre>
+<p>This way you can open it later through:</p>
+<pre class="r"><code>log_Retornos_diarios_indice &lt;-  readRDS(&quot;log_Retornos_diarios_indice.rds&quot;)</code></pre>
+<p>What’s next? We’ll get to it in a little while.</p>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/tidyquant/">tidyquant</a>
+
+                  </div>
+                
+              
+            
+            
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/always-remenber-to-read-the-fine-print/" data-tooltip="Always remember to read the fine print">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/08/b3-stock-returns-ongoing-project/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/08/b3-stock-returns-ongoing-project/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/08/b3-stock-returns-ongoing-project/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2018 Davi Simon. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        
+  <div class="post-actions-wrap">
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/always-remenber-to-read-the-fine-print/" data-tooltip="Always remember to read the fine print">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2018/08/b3-stock-returns-ongoing-project/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2018/08/b3-stock-returns-ongoing-project/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2018/08/b3-stock-returns-ongoing-project/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2018%2F08%2Fb3-stock-returns-ongoing-project%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2018%2F08%2Fb3-stock-returns-ongoing-project%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2018%2F08%2Fb3-stock-returns-ongoing-project%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="//www.gravatar.com/avatar/746a83ace17dffe56417484caa8d9d7d?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Davi Simon</h4>
+    
+      <div id="about-card-bio">Bachelor&rsquo;s degree in Accounting Sciences - UFRGS 2004. Specialist in Finacial, Economic and, Tax Law - UFRGS 2006. Master&rsquo;s Degree in Accounting - UNISINOS 2013. Phd Student at Unisinos</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Accountant, Data Scientist, PhD Student. <a href="http://paginieassociados.com">http://paginieassociados.com</a> <a href="mailto:davi.simon.cnh@gmail.com">davi.simon.cnh@gmail.com</a>
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Brazil, but often somewhere else
+      </div>
+    
+  </div>
+</div>
+
+    <div id="algolia-search-modal" class="modal-container">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="close-button"><i class="fa fa-close"></i></span>
+      <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+        <span class="searchby-algolia-text text-color-light text-small">by</span>
+        <img class="searchby-algolia-logo" src="https://www.algolia.com/static_assets/images/press/downloads/algolia-light.svg">
+      </a>
+      <i class="search-icon fa fa-search"></i>
+      <form id="algolia-search-form">
+        <input type="text" id="algolia-search-input" name="search"
+          class="form-control input--large search-input" placeholder="Search" />
+      </form>
+    </div>
+    <div class="modal-body">
+      <div class="no-result text-color-light text-center">no post found</div>
+      <div class="results">
+        
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/08/b3-stock-returns-ongoing-project/">
+                <h3 class="media-heading">B3 - Stock returns - ongoing project</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Aug 8, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">We start by defining which tickers are we going to consider in our analysis. The file “tickers.xlsx” has tickers from B3 stocks that were active in the stock exchange as of april 2018.
+Download tickers.xlsx We will read it with the function read_excel, from the amazing readxl package https://readxl.tidyverse.org/
+library(readxl) Brazilian stocks are found in yahoofinance with an added “.SA”. So, we add that suffix to the tickers, creating the codigo column in our tickers dataframe.</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/07/always-remenber-to-read-the-fine-print/">
+                <h3 class="media-heading">Always remember to read the fine print</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jul 7, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">Very useful when your first deployment doesn’t work.
+https://maraaverick.rbind.io/2017/10/updating-blogdown-hugo-version-netlify/</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+          <div class="media">
+            
+            <div class="media-body">
+              <a class="link-unstyled" href="/2018/07/my-first-post/">
+                <h3 class="media-heading">My first post</h3>
+              </a>
+              <span class="media-meta">
+                <span class="media-date text-small">
+                  Jul 7, 2018
+                </span>
+              </span>
+              <div class="media-content hide-xs font-merryweather">First post First things first.
+Why having a website? I have a lot of code and ideas to share. Why now? Had to start it at some point. What will I blog about? Accounting, Corporate Finance, Governance (Public and Corporate), Pension Funds. R programming Language, Stata, Rmarkdown. Some others things will show up, I suppose. Will I update it frequently? Highly likely. How did I do it? https://bookdown.org/yihui/blogdown/ How long did it take?</div>
+            </div>
+            <div style="clear:both;"></div>
+            <hr>
+          </div>
+        
+      </div>
+    </div>
+    <div class="modal-footer">
+      <p class="results-count text-medium"
+         data-message-zero="no post found"
+         data-message-one="1 post found"
+         data-message-other="{n} posts found">
+         3 posts found
+      </p>
+    </div>
+  </div>
+</div>
+    
+  
+    
+    <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-qi9wbxp2ya2j6p7wx1i6tgavftewndznf4v0hy2gvivk1rxgc3lm7njqb6bz.min.js"></script>
+
+
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2018\/08\/b3-stock-returns-ongoing-project\/';
+          
+            this.page.identifier = '\/2018\/08\/b3-stock-returns-ongoing-project\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'Davi Simon';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+<script src="//yihui.name/js/math-code.js"></script>
+<script async
+src="//cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+    
+  </body>
+</html>
+
