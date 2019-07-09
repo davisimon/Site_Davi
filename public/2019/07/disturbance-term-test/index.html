@@ -32,12 +32,12 @@
     
     <meta name="description" content="Differences of disturbance terms at the population level and residuals from multivariate OLS.
 Inspired by: https://github.com/Matzge/Simulation-Error-Term-and-Residuals
-TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data)  Creating the true model based on a deterministic function
-Data %&lt;&gt;% mutate(Y = (500 &#43; 2.">
+TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data) Creating the true model based on a deterministic function
+Data %&lt;&gt;% mutate(Y = (500 &#43; 2.7*X1 &#43; 0.">
     <meta property="og:description" content="Differences of disturbance terms at the population level and residuals from multivariate OLS.
 Inspired by: https://github.com/Matzge/Simulation-Error-Term-and-Residuals
-TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data)  Creating the true model based on a deterministic function
-Data %&lt;&gt;% mutate(Y = (500 &#43; 2.">
+TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data) Creating the true model based on a deterministic function
+Data %&lt;&gt;% mutate(Y = (500 &#43; 2.7*X1 &#43; 0.">
     <meta property="og:type" content="blog">
     <meta property="og:title" content="Disturbance Term - Test">
     <meta property="og:url" content="/2019/07/disturbance-term-test/">
@@ -46,8 +46,8 @@ Data %&lt;&gt;% mutate(Y = (500 &#43; 2.">
     <meta name="twitter:title" content="Davi Simon&#39;s blog and site">
     <meta name="twitter:description" content="Differences of disturbance terms at the population level and residuals from multivariate OLS.
 Inspired by: https://github.com/Matzge/Simulation-Error-Term-and-Residuals
-TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data)  Creating the true model based on a deterministic function
-Data %&lt;&gt;% mutate(Y = (500 &#43; 2.">
+TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data) Creating the true model based on a deterministic function
+Data %&lt;&gt;% mutate(Y = (500 &#43; 2.7*X1 &#43; 0.">
     
       <meta name="twitter:creator" content="@Davi_simon">
     
@@ -278,7 +278,7 @@ Data %&lt;&gt;% mutate(Y = (500 &#43; 2.">
 <a href="https://github.com/Matzge/Simulation-Error-Term-and-Residuals" class="uri">https://github.com/Matzge/Simulation-Error-Term-and-Residuals</a></p>
 <div id="true-model" class="section level2">
 <h2>TRUE MODEL</h2>
-<pre class="r2"><code>
+<pre class="r"><code>
 set.seed(1)
 
 X1 &lt;- rnorm(1000, mean = 500, sd=10)
@@ -290,26 +290,51 @@ X3 &lt;- rnorm(1000, mean = 10, sd = 50)
 u &lt;- rnorm(1000, mean=0, sd=10)
 
 Data &lt;- cbind(X1,X2,X3,u)
-Data &lt;- as.data.frame(Data)
-</code></pre>
+Data &lt;- as.data.frame(Data)</code></pre>
 <p>Creating the true model based on a deterministic function</p>
-<pre class="r3"><code>Data %&lt;&gt;% mutate(Y = (500 + 2.7*X1 + 0.44*X2 -0.12*X3 + u))</code></pre>
+<pre class="r"><code>Data %&lt;&gt;% mutate(Y = (500 + 2.7*X1 + 0.44*X2 -0.12*X3 + u))</code></pre>
 <p>Summing and computing trhe mean of the disturbance</p>
-<pre class="r4"><code>
+<pre class="r"><code>
 sum(Data$u)
-mean(Data$u)</code></pre>
+## [1] 167.2225
+mean(Data$u)
+## [1] 0.1672225</code></pre>
 <p>Modelling</p>
-<pre class="r5"><code>Data %&gt;% lm(Y ~ X1 + X2 + X3, data=.) %&gt;% summary()</code></pre>
+<pre class="r"><code>Data %&gt;% lm(Y ~ X1 + X2 + X3, data=.) %&gt;% summary()
+## 
+## Call:
+## lm(formula = Y ~ X1 + X2 + X3, data = .)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -32.427  -7.139  -0.122   7.199  30.592 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 484.86023   17.72691   27.35   &lt;2e-16 ***
+## X1            2.72300    0.03183   85.56   &lt;2e-16 ***
+## X2            0.45516    0.03164   14.38   &lt;2e-16 ***
+## X3           -0.11815    0.00639  -18.49   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 10.4 on 996 degrees of freedom
+## Multiple R-squared:  0.8859, Adjusted R-squared:  0.8856 
+## F-statistic:  2578 on 3 and 996 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Checking the residuals</p>
-<pre class="r6"><code>m1 &lt;- lm(Y ~ X1 + X2 + X3, data=Data)
+<pre class="r"><code>m1 &lt;- lm(Y ~ X1 + X2 + X3, data=Data)
 sum(m1$residuals)
-mean(m1$residuals)</code></pre>
+## [1] 1.894734e-13
+mean(m1$residuals)
+## [1] 1.865747e-16</code></pre>
 <p>Diagnosing residuals</p>
-<pre class="r7"><code>gg_diagnose(m1)</code></pre>
+<pre class="r"><code>gg_diagnose(m1)
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2019-07-09-disturbance-term-test_files/figure-html/c7-1.png" width="672" /></p>
 <p>Ploting residuals x disturbances</p>
-<pre class="r8"><code>Data &lt;- cbind(Data, m1$residuals)
-ggplot(Data) + geom_point(aes(x=u, y=`m1$residuals`))
-</code></pre>
+<pre class="r"><code>Data &lt;- cbind(Data, m1$residuals)
+ggplot(Data) + geom_point(aes(x=u, y=`m1$residuals`))</code></pre>
+<p><img src="/post/2019-07-09-disturbance-term-test_files/figure-html/c8-1.png" width="672" /></p>
 <p>that’s it for today!</p>
 </div>
 
@@ -574,8 +599,8 @@ ggplot(Data) + geom_point(aes(x=u, y=`m1$residuals`))
               </span>
               <div class="media-content hide-xs font-merryweather">Differences of disturbance terms at the population level and residuals from multivariate OLS.
 Inspired by: https://github.com/Matzge/Simulation-Error-Term-and-Residuals
-TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data)  Creating the true model based on a deterministic function
-Data %&lt;&gt;% mutate(Y = (500 + 2.</div>
+TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data) Creating the true model based on a deterministic function
+Data %&lt;&gt;% mutate(Y = (500 + 2.7*X1 + 0.</div>
             </div>
             <div style="clear:both;"></div>
             <hr>

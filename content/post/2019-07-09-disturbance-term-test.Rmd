@@ -1,6 +1,6 @@
 ---
-title: "Disturbance Term - Test"
-author: "Davi Simon"
+title: Disturbance Term - Test
+author: Davi Simon
 date: '2019-07-09'
 keywords: tech
 slug: disturbance-term-test
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(collapse = TRUE)
 ```
 
 
-```{r1, echo=FALSE, message=FALSE, include=FALSE}
+```{r c1, echo=FALSE, message=FALSE, include=FALSE}
 library(dplyr)
 library(readxl)
 library(writexl)
@@ -41,7 +41,7 @@ https://github.com/Matzge/Simulation-Error-Term-and-Residuals
 
 ## TRUE MODEL
 
-```{r2}
+```{r c2}
 
 set.seed(1)
 
@@ -61,13 +61,13 @@ Data <- as.data.frame(Data)
 
 
 Creating the true model based on a deterministic function
-```{r3}
+```{r c3}
 Data %<>% mutate(Y = (500 + 2.7*X1 + 0.44*X2 -0.12*X3 + u))
 ```
 
 
 Summing and computing trhe mean of the disturbance
-```{r4}
+```{r c4, eval=TRUE}
 
 sum(Data$u)
 mean(Data$u)
@@ -76,12 +76,12 @@ mean(Data$u)
 
 
 Modelling
-```{r5}
+```{r c5, eval=TRUE }
 Data %>% lm(Y ~ X1 + X2 + X3, data=.) %>% summary()
 ```
 
 Checking the residuals
-```{r6}
+```{r c6, eval=TRUE} 
 m1 <- lm(Y ~ X1 + X2 + X3, data=Data)
 sum(m1$residuals)
 mean(m1$residuals)
@@ -89,13 +89,13 @@ mean(m1$residuals)
 
 
 Diagnosing residuals
-```{r7}
+```{r c7, eval=TRUE }
 gg_diagnose(m1)
 ```
 
 
 Ploting residuals x disturbances
-```{r8}
+```{r c8, eval=TRUE}
 Data <- cbind(Data, m1$residuals)
 ggplot(Data) + geom_point(aes(x=u, y=`m1$residuals`))
 

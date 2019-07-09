@@ -19,8 +19,8 @@
       <guid>/2019/07/disturbance-term-test/</guid>
       <description>Differences of disturbance terms at the population level and residuals from multivariate OLS.
 Inspired by: https://github.com/Matzge/Simulation-Error-Term-and-Residuals
-TRUE MODEL  set.seed(1) X1 &amp;lt;- rnorm(1000, mean = 500, sd=10) X2 &amp;lt;- rnorm(1000, mean = 250, sd=10) X3 &amp;lt;- rnorm(1000, mean = 10, sd = 50) u &amp;lt;- rnorm(1000, mean=0, sd=10) Data &amp;lt;- cbind(X1,X2,X3,u) Data &amp;lt;- as.data.frame(Data)  Creating the true model based on a deterministic function
-Data %&amp;lt;&amp;gt;% mutate(Y = (500 + 2.</description>
+TRUE MODEL  set.seed(1) X1 &amp;lt;- rnorm(1000, mean = 500, sd=10) X2 &amp;lt;- rnorm(1000, mean = 250, sd=10) X3 &amp;lt;- rnorm(1000, mean = 10, sd = 50) u &amp;lt;- rnorm(1000, mean=0, sd=10) Data &amp;lt;- cbind(X1,X2,X3,u) Data &amp;lt;- as.data.frame(Data) Creating the true model based on a deterministic function
+Data %&amp;lt;&amp;gt;% mutate(Y = (500 + 2.7*X1 + 0.</description>
     </item>
     
   </channel>

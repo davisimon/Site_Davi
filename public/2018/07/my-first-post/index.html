@@ -590,8 +590,8 @@ ggplot(data=RaRb) + geom_point(aes(x=Rb, y=Ra)) + geom_smooth(aes(x=Rb, y=Ra), m
               </span>
               <div class="media-content hide-xs font-merryweather">Differences of disturbance terms at the population level and residuals from multivariate OLS.
 Inspired by: https://github.com/Matzge/Simulation-Error-Term-and-Residuals
-TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data)  Creating the true model based on a deterministic function
-Data %&lt;&gt;% mutate(Y = (500 + 2.</div>
+TRUE MODEL  set.seed(1) X1 &lt;- rnorm(1000, mean = 500, sd=10) X2 &lt;- rnorm(1000, mean = 250, sd=10) X3 &lt;- rnorm(1000, mean = 10, sd = 50) u &lt;- rnorm(1000, mean=0, sd=10) Data &lt;- cbind(X1,X2,X3,u) Data &lt;- as.data.frame(Data) Creating the true model based on a deterministic function
+Data %&lt;&gt;% mutate(Y = (500 + 2.7*X1 + 0.</div>
             </div>
             <div style="clear:both;"></div>
             <hr>
