@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Lindia on Davi Simon&#39;s blog and site</title>
+    <link>/tags/lindia/</link>
+    <description>Recent content in Lindia on Davi Simon&#39;s blog and site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 09 Jul 2019 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/lindia/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Disturbance Term - Test</title>
+      <link>/2019/07/disturbance-term-test/</link>
+      <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/2019/07/disturbance-term-test/</guid>
+      <description>Differences of disturbance terms at the population level and residuals from multivariate OLS.
+Inspired by: https://github.com/Matzge/Simulation-Error-Term-and-Residuals
+TRUE MODEL  set.seed(1) X1 &amp;lt;- rnorm(1000, mean = 500, sd=10) X2 &amp;lt;- rnorm(1000, mean = 250, sd=10) X3 &amp;lt;- rnorm(1000, mean = 10, sd = 50) u &amp;lt;- rnorm(1000, mean=0, sd=10) Data &amp;lt;- cbind(X1,X2,X3,u) Data &amp;lt;- as.data.frame(Data)  Creating the true model based on a deterministic function
+Data %&amp;lt;&amp;gt;% mutate(Y = (500 + 2.</description>
+    </item>
+    
+  </channel>
+</rss>
