@@ -1,0 +1,104 @@
+---
+title: Disturbance Term - Test
+author: 'Davi Simon'
+date: '2019-07-09'
+slug: disturbance-term-test
+categories: []
+tags: []
+keywords:
+  - tech
+---
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+library(GetDFPData)
+library(tidyquant)
+library(dplyr)
+library(readxl)
+library(writexl)
+library(stringr)
+library(tidyverse)
+library(rstudioapi)
+library(magrittr)
+library(tidyverse)
+library(ggplot2)
+library(dslabs)
+library(lubridate)
+require(zoo)
+library(BatchGetSymbols)
+require(xfun)
+require(lindia)
+xfun::pkg_load2(c('base64enc', 'htmltools', 'mime'))
+
+library(knitr)
+library(kableExtra)
+
+```
+
+
+
+
+## TRUE MODEL
+
+```{r}
+
+set.seed(1)
+
+X1 <- rnorm(100000, mean = 500, sd=10)
+
+X2 <- rnorm(100000, mean = 250, sd=10)
+
+X3 <- rnorm(100000, mean = 10, sd = 50)
+
+u <- rnorm(100000, mean=0, sd=10)
+
+Data <- cbind(X1,X2,X3,u)
+Data <- as.data.frame(Data)
+
+```
+
+
+
+Creating the true model based on a deterministic function
+```{r}
+Data %<>% mutate(Y = (500 + 2.7*X1 + 0.44*X2 -0.12*X3 + u))
+```
+
+
+Summing and computing trhe mean of the disturbance
+```{r}
+
+sum(Data$u)
+mean(Data$u)
+```
+
+
+
+Modelling
+```{r}
+Data %>% lm(Y ~ X1 + X2 + X3, data=.) %>% summary()
+```
+
+Checking the residuals
+```{r}
+m1 <- lm(Y ~ X1 + X2 + X3, data=Data)
+sum(m1$residuals)
+mean(m1$residuals)
+```
+
+
+Diagnosing residuals
+```{r}
+gg_diagnose(m1)
+```
+
+
+Ploting residuals x disturbances
+```{r}
+Data <- cbind(Data, m1$residuals)
+ggplot(Data) + geom_point(aes(x=u, y=`m1$residuals`))
+
+```
+
+
+
+that's it for today!
