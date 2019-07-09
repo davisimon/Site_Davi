@@ -1,17 +1,14 @@
 ---
-title: Disturbance Term - Test
-author: 'Davi Simon'
+title: "Disturbance Term - Test"
+author: "Davi Simon"
 date: '2019-07-09'
+keywords: tech
 slug: disturbance-term-test
-categories: []
 tags: []
-keywords:
-  - tech
+categories: []
 ---
 
 ```{r, echo=FALSE, message=FALSE, include=FALSE}
-library(GetDFPData)
-library(tidyquant)
 library(dplyr)
 library(readxl)
 library(writexl)
@@ -21,20 +18,17 @@ library(rstudioapi)
 library(magrittr)
 library(tidyverse)
 library(ggplot2)
-library(dslabs)
-library(lubridate)
-require(zoo)
-library(BatchGetSymbols)
-require(xfun)
 require(lindia)
-xfun::pkg_load2(c('base64enc', 'htmltools', 'mime'))
-
 library(knitr)
 library(kableExtra)
 
 ```
 
 
+Differences of disturbance terms at the population level and residuals from multivariate OLS. 
+
+Inspired by: 
+https://github.com/Matzge/Simulation-Error-Term-and-Residuals
 
 
 ## TRUE MODEL
@@ -43,13 +37,13 @@ library(kableExtra)
 
 set.seed(1)
 
-X1 <- rnorm(100000, mean = 500, sd=10)
+X1 <- rnorm(1000, mean = 500, sd=10)
 
-X2 <- rnorm(100000, mean = 250, sd=10)
+X2 <- rnorm(1000, mean = 250, sd=10)
 
-X3 <- rnorm(100000, mean = 10, sd = 50)
+X3 <- rnorm(1000, mean = 10, sd = 50)
 
-u <- rnorm(100000, mean=0, sd=10)
+u <- rnorm(1000, mean=0, sd=10)
 
 Data <- cbind(X1,X2,X3,u)
 Data <- as.data.frame(Data)
