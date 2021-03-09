@@ -1,0 +1,173 @@
+---
+title: Calculando Betas de empresas na B3
+author: R package build
+date: '2021-03-09'
+slug: index.pt-br
+categories:
+  - Finance
+tags:
+  - tidyquant
+keywords:
+  - tech
+---
+
+<!--more-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+require(tidyverse)
+library(tidyquant)
+library(writexl)
+library(kableExtra)
+library(readxl)
+```
+
+
+Começamos com o download dos tickers de empresas ativas em março de 2021.
+
+```{r echo=FALSE}
+# a single file
+xfun::embed_file('tickers.xlsx')
+```
+
+A leitura dos tickers é feita com o comando read_excel, do pacote readxl <https://readxl.tidyverse.org/>
+
+```{r readxl, eval=FALSE}
+library(readxl)
+```
+
+As ações de empresas brasileiras são encontradas no *yahoofinance* com a adição de ".SA" aos tickers. Então, temos que adicionar esse sufixo ao nosso arquivo de tickers, criando a coluna codigo no dataframe *tickers* . 
+
+```{r tickers, eval=FALSE}
+tickers <- read_excel("tickers.xlsx", sheet=1, col_names = TRUE)
+tickers$codigo <- paste(tickers$`unique(Dados$Codigo)`,".SA",sep="")
+lista <- tickers$codigo
+```
+
+A função *tq_get* do pacote tidyquant <https://cran.r-project.org/web/packages/tidyquant/index.html>, permite a obtenção de preços diários das ações diretamente do <https://finance.yahoo.com/>, para todos os nossos tickerts. É um processo que pode demorar, dependendo da qualidade da conexão com a internet.
+No mesmo bloco de código, transformamos os preços diários em retornos logarítmicos ajustados, que são definidos da seguinte forma:
+
+$$LogReturns = \log(\frac{P_{t}+Proventos}{P_{t-1}})$$
+O Código para obter as informações de preço ajustado das ações que compõem nossa lista de tickers, bem como da Bovespa, estão nos blocos abaixo:
+
+```{r tidydplyr, eval=FALSE}
+library(tidyquant)
+library(dplyr)
+```
+
+```{r retornos diarios, eval=FALSE}
+log_Retornos_diarios <-   lista %>%
+  tq_get(get  = "stock.prices",
+         from = "2016-03-01",
+         to   = "2021-02-28") %>%
+  group_by(symbol) %>%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = "daily",
+               type = "log",
+               col_rename = "Ra")
+```
+
+
+```{r retornos bolsa, eval=FALSE}
+log_Rb <- "^BVSP" %>%
+  tq_get(get  = "stock.prices",
+         from = "2016-03-01",
+         to   = "2021-02-28") %>%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = "daily",
+               type = "log",
+               col_rename = "Rb")
+```
+
+
+Considerando que utilizaremos os dados para calcular os coeficientes betas das empresas brasileiras da B3, faremos a junção do objeto com os retornos das ações com os objetos contendo os retornos do índice IBOVESPA, usando a função dplyr::left_join.
+
+```{r logretornos, eval=FALSE}
+log_Retornos_diarios_indice <- left_join(log_Retornos_diarios, log_Rb, by = c("date" = "date"))
+```
+
+```{r readRDS1, echo=FALSE}
+log_Retornos_diarios_indice <-  readRDS("log_Retornos_diarios_indice.rds")
+```
+
+
+Uma inspeção básica do objeto que contem todos os dados:
+```{r inspect}
+head(log_Retornos_diarios_indice)
+```
+
+
+Estatísticas básicas por ativo
+```{r keystats1}
+log_Retornos_diarios_indice  %>% 
+      group_by(symbol) %>% 
+      summarise(mean = mean(Ra),
+                sd = sd(Ra))%>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover")) %>% 
+  scroll_box(width = "100%", height = "200px")
+```
+
+
+Salvamos o objeto gerado até agora no formato rds, nativo do R, para utilização posterior.
+```{r saveRDS, , eval=FALSE}
+saveRDS(log_Retornos_diarios_indice, "log_Retornos_diarios_indice.rds")
+```
+
+Para abrir o objeto novamente, é só usar o comando abaixo:
+```{r readRDS,  eval=FALSE}
+log_Retornos_diarios_indice <-  readRDS("log_Retornos_diarios_indice.rds")
+```
+
+
+Abaixo um exemplo de análise individual, utilizando as ações preferenciais da Petrobras (PETR4)
+```{r Petrobras}
+# Objeto com PETR4 
+sort(unique(log_Retornos_diarios_indice$symbol))
+petro <- log_Retornos_diarios_indice %>% dplyr::filter(symbol=="PETR4.SA")
+
+ggplot(petro) + geom_point(aes(x=Rb,y=Ra))
+ggplot(petro) + geom_point(aes(x=Rb,y=Ra)) + geom_smooth(aes(x=Rb,y=Ra), method = "lm")
+```
+
+
+Vamos gerar uma tabela com os coeficientes beta de todas as empresas que fazem parte da nossa lista, e exportar essas informações para o Excel
+
+
+#Tabela 
+
+```{r TabelaBetas}
+require(tidyverse)
+library(tidyquant)
+library(writexl)
+library(kableExtra)
+
+log_Retornos_diarios_indice  %>% 
+  group_by(symbol) %>% 
+  summarise(mean = mean(Ra),
+            sd = sd(Ra), 
+            beta = coefficients(summary(lm(Ra ~ Rb)))[2])%>% 
+  arrange(beta) %>% 
+  kable() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover")) %>% 
+  scroll_box(width = "100%", height = "200px")
+
+```
+
+```{r Exportar, eval=FALSE}
+# Levar para o Excel
+
+arquivo <- log_Retornos_diarios_indice  %>% 
+  group_by(symbol) %>% 
+  summarise(mean = mean(Ra),
+            sd = sd(Ra), 
+            beta = coefficients(summary(lm(Ra ~ Rb)))[2])%>% 
+  arrange(beta) 
+require(writexl)
+write_xlsx(arquivo, "Betas.xlsx")
+```

@@ -1,49 +1,45 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Davi Simon&#39;s blog and site</title>
-    <link>/tags/</link>
+    <link>https://davi-simon.netlify.com/tags/</link>
     <description>Recent content in Tags on Davi Simon&#39;s blog and site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 24 Jul 2018 12:56:14 -0500</lastBuildDate>
-    
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 09 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://davi-simon.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>About</title>
-      <link>/tags/about/</link>
-      <pubDate>Tue, 24 Jul 2018 12:56:14 -0500</pubDate>
+      <title>tidyquant</title>
+      <link>https://davi-simon.netlify.com/tags/tidyquant/</link>
+      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
       
-      <guid>/tags/about/</guid>
+      <guid>https://davi-simon.netlify.com/tags/tidyquant/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Lindia</title>
-      <link>/tags/lindia/</link>
+      <title>lindia</title>
+      <link>https://davi-simon.netlify.com/tags/lindia/</link>
       <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
       
-      <guid>/tags/lindia/</guid>
+      <guid>https://davi-simon.netlify.com/tags/lindia/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://davi-simon.netlify.com/tags/about/</link>
+      <pubDate>Tue, 24 Jul 2018 12:56:14 -0500</pubDate>
+      
+      <guid>https://davi-simon.netlify.com/tags/about/</guid>
       <description></description>
     </item>
     
     <item>
       <title>R Markdown</title>
-      <link>/tags/r-markdown/</link>
+      <link>https://davi-simon.netlify.com/tags/r-markdown/</link>
       <pubDate>Tue, 24 Jul 2018 12:56:14 -0500</pubDate>
       
-      <guid>/tags/r-markdown/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Tidyquant</title>
-      <link>/tags/tidyquant/</link>
-      <pubDate>Wed, 01 Aug 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/tags/tidyquant/</guid>
+      <guid>https://davi-simon.netlify.com/tags/r-markdown/</guid>
       <description></description>
     </item>
     

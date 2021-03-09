@@ -6,6 +6,7 @@ categories: ["R","Finance","Accounting"]
 tags: ["R Markdown", "About"]
 ---
 
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
 <div id="first-post" class="section level1">
@@ -29,7 +30,9 @@ tags: ["R Markdown", "About"]
                mutate_fun = periodReturn,
                type       = &quot;log&quot;,
                period     = &quot;daily&quot;, 
-               col_rename = &quot;Ra&quot;)</code></pre>
+               col_rename = &quot;Ra&quot;)
+## Warning in to_period(xx, period = on.opts[[period]], ...): missing values
+## removed from data</code></pre>
 <p>Getting Ibovespa’s returns in the same three year window.</p>
 <pre class="r"><code>Rb &lt;- &quot;^BVSP&quot; %&gt;%
   tq_get(get  = &quot;stock.prices&quot;,
@@ -47,13 +50,13 @@ tags: ["R Markdown", "About"]
 <p>Analyzing the variables.</p>
 <pre class="r"><code>summary(RaRb) 
 ##       date                  Ra                   Rb           
-##  Min.   :2015-07-21   Min.   :-0.1714899   Min.   :-0.092107  
-##  1st Qu.:2016-04-26   1st Qu.:-0.0176760   1st Qu.:-0.007375  
-##  Median :2017-01-23   Median : 0.0012792   Median : 0.000909  
-##  Mean   :2017-01-21   Mean   : 0.0007198   Mean   : 0.000549  
-##  3rd Qu.:2017-10-20   3rd Qu.: 0.0178110   3rd Qu.: 0.008687  
-##  Max.   :2018-07-19   Max.   : 0.1508583   Max.   : 0.063887  
-##                                            NA&#39;s   :7</code></pre>
+##  Min.   :2015-07-21   Min.   :-0.1714898   Min.   :-0.092107  
+##  1st Qu.:2016-04-26   1st Qu.:-0.0176768   1st Qu.:-0.007384  
+##  Median :2017-01-21   Median : 0.0012791   Median : 0.000906  
+##  Mean   :2017-01-20   Mean   : 0.0007217   Mean   : 0.000550  
+##  3rd Qu.:2017-10-18   3rd Qu.: 0.0178698   3rd Qu.: 0.008675  
+##  Max.   :2018-07-19   Max.   : 0.1508582   Max.   : 0.063887  
+##                                            NA&#39;s   :6</code></pre>
 <p>Getting rid of missing data</p>
 <pre class="r"><code>RaRb &lt;- RaRb %&gt;% filter(!is.na(Rb))</code></pre>
 <div id="will-i-post-cool-graphs" class="section level2">
@@ -61,7 +64,8 @@ tags: ["R Markdown", "About"]
 <p>You bet!</p>
 <pre class="r"><code>
 ggplot(data=RaRb) + geom_point(aes(x=Rb, y=Ra)) + geom_smooth(aes(x=Rb, y=Ra), method=&quot;lm&quot;) + xlab(&quot;IBOVESPA&quot;) + ylab(&quot;PETR4&quot;) + 
-  ggtitle(&quot;Beta from daily returns - 3 years from July 20, 2018)&quot;, subtitle = paste(&quot;R(PETR4) = Rf + &quot;,round(coef(summary(lm(Ra~Rb, data=RaRb)))[2,1],2),&quot;(Rm - Rf)&quot;,sep=&quot;&quot;)) + geom_vline(xintercept=0, color = &quot;black&quot;) + geom_hline(yintercept=0, color = &quot;black&quot;) </code></pre>
+  ggtitle(&quot;Beta from daily returns - 3 years from July 20, 2018)&quot;, subtitle = paste(&quot;R(PETR4) = Rf + &quot;,round(coef(summary(lm(Ra~Rb, data=RaRb)))[2,1],2),&quot;(Rm - Rf)&quot;,sep=&quot;&quot;)) + geom_vline(xintercept=0, color = &quot;black&quot;) + geom_hline(yintercept=0, color = &quot;black&quot;) 
+## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="/post/2018-07-25-first_post_files/figure-html/Beta-1.png" width="672" /></p>
 </div>
 </div>

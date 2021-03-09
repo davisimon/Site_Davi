@@ -1,22 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>About on Davi Simon&#39;s blog and site</title>
-    <link>/tags/about/</link>
+    <link>https://davi-simon.netlify.com/tags/about/</link>
     <description>Recent content in About on Davi Simon&#39;s blog and site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 24 Jul 2018 12:56:14 -0500</lastBuildDate>
-    
-	<atom:link href="/tags/about/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Tue, 24 Jul 2018 12:56:14 -0500</lastBuildDate><atom:link href="https://davi-simon.netlify.com/tags/about/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>My first post</title>
-      <link>/2018/07/my-first-post/</link>
+      <link>https://davi-simon.netlify.com/2018/07/my-first-post/</link>
       <pubDate>Tue, 24 Jul 2018 12:56:14 -0500</pubDate>
       
-      <guid>/2018/07/my-first-post/</guid>
+      <guid>https://davi-simon.netlify.com/2018/07/my-first-post/</guid>
       <description>First post First things first.
 Why having a website? I have a lot of code and ideas to share. Why now? Had to start it at some point. What will I blog about? Accounting, Corporate Finance, Governance (Public and Corporate), Pension Funds. R programming Language, Stata, Rmarkdown. Some others things will show up, I suppose. Will I update it frequently? Highly likely. How did I do it? https://bookdown.org/yihui/blogdown/ How long did it take?</description>
     </item>

@@ -1,96 +1,58 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  
   <url>
-    <loc>/2019/07/disturbance-term-test/</loc>
+    <loc>https://davi-simon.netlify.com/2021/03/index.pt-br/</loc>
+    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/categories/</loc>
+    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/</loc>
+    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/categories/finance/</loc>
+    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/post/</loc>
+    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/tags/</loc>
+    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/tags/tidyquant/</loc>
+    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/2019/07/disturbance-term-test/</loc>
     <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2018/08/b3-stock-returns-ongoing-project/</loc>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/tags/lindia/</loc>
+    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/categories/r/</loc>
+    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/2018/08/b3-stock-returns-ongoing-project/</loc>
     <lastmod>2018-08-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2018/07/always-remenber-to-read-the-fine-print/</loc>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/2018/07/always-remenber-to-read-the-fine-print/</loc>
     <lastmod>2018-07-25T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2018/07/my-first-post/</loc>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/tags/about/</loc>
     <lastmod>2018-07-24T12:56:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/about/</loc>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/categories/accounting/</loc>
     <lastmod>2018-07-24T12:56:14-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/accounting/</loc>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/2018/07/my-first-post/</loc>
     <lastmod>2018-07-24T12:56:14-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/archives/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/tags/r-markdown/</loc>
     <lastmod>2018-07-24T12:56:14-05:00</lastmod>
-    <priority>0</priority>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/about/</loc>
+    <lastmod>2016-05-05T21:48:51-07:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/archives/</loc>
   </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/finance/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/lindia/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2019-07-09T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/r-markdown/</loc>
-    <lastmod>2018-07-24T12:56:14-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2018-07-24T12:56:14-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/tidyquant/</loc>
-    <lastmod>2018-08-01T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
 </urlset>

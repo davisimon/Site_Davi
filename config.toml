@@ -32,8 +32,8 @@ canonifyurls = true
 
 [author]
   name = "Davi Simon"
-  bio = "Bachelor's degree in Accounting Sciences - UFRGS 2004. Specialist in Finacial, Economic and, Tax Law - UFRGS 2006. Master's Degree in Accounting - UNISINOS 2013. Phd Student at Unisinos"
-  job = "Accountant, Data Scientist, PhD Student. http://paginieassociados.com <davi.simon.cnh@gmail.com>"
+  bio = "Bachelor's degree in Accounting Sciences - UFRGS 2004. Specialist in Finacial, Economic and, Tax Law - UFRGS 2006. Master's Degree in Accounting - UNISINOS 2013. Doctoral Degree in Accounting at Unisinos 2020"
+  job = "Accountant, Data Scientist. http://paginieassociados.com <davi.simon.cnh@gmail.com>"
   location = "Brazil, but often somewhere else"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
   gravatarEmail = "davi.simon.cnh@gmail.com"
