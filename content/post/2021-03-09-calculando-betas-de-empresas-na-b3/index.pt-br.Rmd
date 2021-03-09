@@ -11,6 +11,8 @@ keywords:
   - tech
 ---
 
+Nesse post, calculamos o coeficiente Beta do modelo CAPM de empresas de capital aberto com ações negociadas na B3.
+
 <!--more-->
 
 ```{r setup, include=FALSE}
@@ -38,6 +40,7 @@ A leitura dos tickers é feita com o comando read_excel, do pacote readxl <https
 ```{r readxl, eval=FALSE}
 library(readxl)
 ```
+
 
 As ações de empresas brasileiras são encontradas no *yahoofinance* com a adição de ".SA" aos tickers. Então, temos que adicionar esse sufixo ao nosso arquivo de tickers, criando a coluna codigo no dataframe *tickers* . 
 
