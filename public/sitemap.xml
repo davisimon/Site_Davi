@@ -2,19 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://davi-simon.netlify.com/</loc>
+    <lastmod>2021-03-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/2021/03/posimport.pt-br/</loc>
+    <lastmod>2021-03-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/post/</loc>
+    <lastmod>2021-03-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://davi-simon.netlify.com/2021/03/dadosbrasileiros/</loc>
+    <lastmod>2021-03-17T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://davi-simon.netlify.com/2021/03/index.pt-br/</loc>
     <lastmod>2021-03-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://davi-simon.netlify.com/categories/</loc>
     <lastmod>2021-03-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://davi-simon.netlify.com/</loc>
-    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://davi-simon.netlify.com/categories/finance/</loc>
-    <lastmod>2021-03-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://davi-simon.netlify.com/post/</loc>
     <lastmod>2021-03-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://davi-simon.netlify.com/tags/</loc>

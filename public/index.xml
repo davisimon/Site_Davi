@@ -6,7 +6,35 @@
     <description>Recent content on Davi Simon&#39;s blog and site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 09 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://davi-simon.netlify.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 18 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://davi-simon.netlify.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Importei os dados, e agora?</title>
+      <link>https://davi-simon.netlify.com/2021/03/posimport.pt-br/</link>
+      <pubDate>Thu, 18 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://davi-simon.netlify.com/2021/03/posimport.pt-br/</guid>
+      <description>
+&lt;script src=&#34;https://davi-simon.netlify.com/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;Após concluída a importação dos dados, no post anterior, nesse post realizamos diversas análises.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Dados Brasileiros</title>
+      <link>https://davi-simon.netlify.com/2021/03/dadosbrasileiros/</link>
+      <pubDate>Wed, 17 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://davi-simon.netlify.com/2021/03/dadosbrasileiros/</guid>
+      <description>
+&lt;script src=&#34;https://davi-simon.netlify.com/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;Nesse post, realizamos a importação de dados de empresas Brasileiras de Capital aberto, com ações negociadas na B3.&lt;/p&gt;
+</description>
+    </item>
+    
     <item>
       <title>Calculando Betas de empresas na B3</title>
       <link>https://davi-simon.netlify.com/2021/03/index.pt-br/</link>
@@ -15,8 +43,11 @@
       <guid>https://davi-simon.netlify.com/2021/03/index.pt-br/</guid>
       <description>
 &lt;script src=&#34;https://davi-simon.netlify.com/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://davi-simon.netlify.com/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;https://davi-simon.netlify.com/rmarkdown-libs/lightable/lightable.css&#34; rel=&#34;stylesheet&#34; /&gt;
 
 
+&lt;p&gt;Nesse post, calculamos o coeficiente Beta do modelo CAPM de empresas de capital aberto com ações negociadas na B3.&lt;/p&gt;
 </description>
     </item>
     

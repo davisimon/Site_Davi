@@ -1,0 +1,374 @@
+---
+title: Importei os dados, e agora?
+author: R package build
+date: '2021-03-18'
+slug: posimport.pt-br
+categories: []
+tags: []
+keywords:
+  - tech
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<p>Após concluída a importação dos dados, no post anterior, nesse post realizamos diversas análises.</p>
+<!--more-->
+<p>Se você tiver aberto uma nova seção, necessário carregar novamente os pacotes e definir novamente o diretório de trabalho.</p>
+<pre class="r"><code>library(tidyverse)
+library(readxl)
+library(writexl)
+library(performance)
+library(lindia)
+library(plm)
+library(data.table)
+library(lubridate)
+
+require(rstudioapi)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+</code></pre>
+<p>Se precisar carregar novamente os dados</p>
+<pre class="r"><code>
+
+nomes_colunas &lt;- read_xlsx(&quot;colnames.xlsx&quot;,col_names = FALSE)
+## New names:
+## * `` -&gt; ...1
+arquivos &lt;- list.files()
+arquivos &lt;- arquivos[grepl(&quot;xlsx&quot;, arquivos)]
+arquivos &lt;- arquivos[grepl(&quot;dados&quot;, arquivos)]
+
+#loop 
+for(i in 1:length(arquivos)) {
+  
+  d &lt;- read_xlsx(arquivos[i],skip=3, col_names = make.names(nomes_colunas$...1))
+  d$Ano &lt;- sub(&quot;^dados_&quot;, &quot;31/12/&quot;, arquivos[i])
+  d$Ano &lt;- sub(&quot;.xlsx&quot;, &quot;&quot;, d$Ano)
+  d$Ano &lt;- dmy(d$Ano)
+  d$Nome_ano &lt;- paste(d$Nome, d$Ano, sep=&quot;_&quot;)
+  d$Cod_ano &lt;- paste(d$Código, d$Ano, sep=&quot;_&quot;)
+  assign(sub(&quot;.xlsx&quot;, &quot;&quot;, arquivos[i]),d)
+  rm(d)
+} 
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+## New names:
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...4
+## * Tipo.de.Ativo -&gt; Tipo.de.Ativo...5
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...6
+## * Bolsa...Fonte -&gt; Bolsa...Fonte...8
+## * Ativo....Cancelado -&gt; Ativo....Cancelado...9
+## * ...
+
+listaDados &lt;- mget(ls(pattern = &quot;^dados&quot;))
+listaDados &lt;- data.table::rbindlist(listaDados)
+rm(list = apropos(&quot;^dados&quot;))</code></pre>
+<p>Convertendo caracteres para números.</p>
+<pre class="r"><code>listaDados &lt;- suppressWarnings(listaDados %&gt;% mutate_at(c(15:57), as.numeric))</code></pre>
+<p>Estatística descritiva básica:</p>
+<pre class="r"><code>summary(listaDados)
+##      Ordem         Nome              Classe          Bolsa...Fonte...4 
+##  Min.   :  1   Length:4202        Length:4202        Length:4202       
+##  1st Qu.: 96   Class :character   Class :character   Class :character  
+##  Median :191   Mode  :character   Mode  :character   Mode  :character  
+##  Mean   :191                                                           
+##  3rd Qu.:286                                                           
+##  Max.   :381                                                           
+##  NA&#39;s   :11                                                            
+##  Tipo.de.Ativo...5  Ativo....Cancelado...6    Código         
+##  Length:4202        Length:4202            Length:4202       
+##  Class :character   Class :character       Class :character  
+##  Mode  :character   Mode  :character       Mode  :character  
+##                                                              
+##                                                              
+##                                                              
+##                                                              
+##  Bolsa...Fonte...8  Ativo....Cancelado...9 Tipo.de.Ativo...10
+##  Length:4202        Length:4202            Length:4202       
+##  Class :character   Class :character       Class :character  
+##  Mode  :character   Mode  :character       Mode  :character  
+##                                                              
+##                                                              
+##                                                              
+##                                                              
+##  Setor.NAICS..ult.disponiv Segmento.Bovespa   Setor.Econômico..Bovespa
+##  Length:4202               Length:4202        Length:4202             
+##  Class :character          Class :character   Class :character        
+##  Mode  :character          Mode  :character   Mode  :character        
+##                                                                       
+##                                                                       
+##                                                                       
+##                                                                       
+##  Setor..Economatica Valor.Mercado       EnterpriseValue       Ativo_Tot        
+##  Length:4202        Min.   :     1374   Min.   :-64436921   Min.   :0.000e+00  
+##  Class :character   1st Qu.:   258835   1st Qu.:   452853   1st Qu.:5.366e+05  
+##  Mode  :character   Median :  1622848   Median :  2399001   Median :2.589e+06  
+##                     Mean   : 10665867   Mean   : 12314801   Mean   :2.688e+07  
+##                     3rd Qu.:  6332864   3rd Qu.:  8741033   3rd Qu.:9.790e+06  
+##                     Max.   :448610718   Max.   :728681847   Max.   :2.113e+09  
+##                     NA&#39;s   :1275        NA&#39;s   :1596        NA&#39;s   :776        
+##    Patrim_Liq           Receita          Lucro.Liquido      
+##  Min.   :-14148750   Min.   :  -472086   Min.   :-44212187  
+##  1st Qu.:   140968   1st Qu.:   188754   1st Qu.:    -1356  
+##  Median :   846388   Median :   945680   Median :    44236  
+##  Mean   :  5376862   Mean   :  6093318   Mean   :   499034  
+##  3rd Qu.:  2705104   3rd Qu.:  3873438   3rd Qu.:   294959  
+##  Max.   :347939893   Max.   :349836000   Max.   : 40137000  
+##  NA&#39;s   :776         NA&#39;s   :1048        NA&#39;s   :777        
+##       EBIT               RentAt            RenPat.med.       
+##  Min.   :-28337139   Min.   :-13330.769   Min.   :-739.4824  
+##  1st Qu.:     4201   1st Qu.:    -1.024   1st Qu.:   0.9053  
+##  Median :   103274   Median :     2.598   Median :   9.0645  
+##  Mean   :   758370   Mean   :   -19.213   Mean   :   1.5575  
+##  3rd Qu.:   544556   3rd Qu.:     6.813   3rd Qu.:  17.8718  
+##  Max.   : 81701000   Max.   :  1188.856   Max.   : 821.6509  
+##  NA&#39;s   :1024        NA&#39;s   :784          NA&#39;s   :1267       
+##    CaixaEEqCx           AplFin           Imob_EmOper          Imob_Arren      
+##  Min.   :      -3   Min.   :        0   Min.   :        0   Min.   :       0  
+##  1st Qu.:    9686   1st Qu.:        0   1st Qu.:    10381   1st Qu.:       0  
+##  Median :   94379   Median :     5150   Median :   116520   Median :       0  
+##  Mean   :  894632   Mean   :   533381   Mean   :  1962569   Mean   :   85007  
+##  3rd Qu.:  495772   3rd Qu.:   199273   3rd Qu.:   719517   3rd Qu.:       0  
+##  Max.   :97845000   Max.   :117859000   Max.   :346837738   Max.   :10690809  
+##  NA&#39;s   :1045       NA&#39;s   :1052        NA&#39;s   :1705        NA&#39;s   :1705      
+##   Imob_ImoCur        ImobilizadoTotal        IntLiq            Goodwill       
+##  Min.   : -1822000   Min.   :        0   Min.   :       0   Min.   :       0  
+##  1st Qu.:        0   1st Qu.:    17450   1st Qu.:    1298   1st Qu.:       0  
+##  Median :        0   Median :   168750   Median :   68093   Median :       0  
+##  Mean   :   427265   Mean   :  4205943   Mean   : 1732154   Mean   :  348121  
+##  3rd Qu.:     8869   3rd Qu.:  1082651   3rd Qu.:  783523   3rd Qu.:       0  
+##  Max.   :186840325   Max.   :645434000   Max.   :83098192   Max.   :40023457  
+##  NA&#39;s   :1705        NA&#39;s   :779         NA&#39;s   :1020       NA&#39;s   :1662      
+##      FinCP              DbntCP           FiArFin             FinLP          
+##  Min.   :       0   Min.   :    -49   Min.   :       0   Min.   :        0  
+##  1st Qu.:    5911   1st Qu.:      0   1st Qu.:       0   1st Qu.:     2838  
+##  Median :   96303   Median :      0   Median :       0   Median :   167666  
+##  Mean   :  543012   Mean   :  99014   Mean   :   26077   Mean   :  2616512  
+##  3rd Qu.:  402439   3rd Qu.:  44462   3rd Qu.:       0   3rd Qu.:  1066113  
+##  Max.   :57334000   Max.   :4983261   Max.   :29613000   Max.   :435313000  
+##  NA&#39;s   :1297       NA&#39;s   :1297      NA&#39;s   :1297       NA&#39;s   :1319       
+##      DbntLP          FinArFiLT          PeNaoRecAt           CxOper         
+##  Min.   :      0   Min.   :       0   Min.   :-1060170   Min.   :-69668180  
+##  1st Qu.:      0   1st Qu.:       0   1st Qu.:       0   1st Qu.:      612  
+##  Median :      0   Median :       0   Median :       0   Median :    81926  
+##  Mean   : 436368   Mean   :   86986   Mean   :   41715   Mean   :  1244597  
+##  3rd Qu.: 292806   3rd Qu.:       0   3rd Qu.:       0   3rd Qu.:   527126  
+##  Max.   :9199491   Max.   :82897000   Max.   :36279490   Max.   :209330358  
+##  NA&#39;s   :1319      NA&#39;s   :1319       NA&#39;s   :1052       NA&#39;s   :777        
+##  Co.Liq.Atv.Per        FinObtLiq             Fin.Obt        
+##  Min.   :-89970799   Min.   :-116217000   Min.   :  -84480  
+##  1st Qu.:  -379184   1st Qu.:    -53670   1st Qu.:    1563  
+##  Median :   -63370   Median :         0   Median :  183224  
+##  Mean   :  -727868   Mean   :    -65707   Mean   : 1219315  
+##  3rd Qu.:    -5626   3rd Qu.:    100496   3rd Qu.:  874184  
+##  Max.   : 13541742   Max.   :  35134000   Max.   :86467000  
+##  NA&#39;s   :1223        NA&#39;s   :1226         NA&#39;s   :1315      
+##     Fin.Pag            AumLiqCap..          DeprAmor            VaLiCx         
+##  Min.   :-180182000   Min.   :-5092414   Min.   :  -31154   Min.   :-60321468  
+##  1st Qu.:   -813920   1st Qu.:       0   1st Qu.:    7462   1st Qu.:   -21407  
+##  Median :   -189600   Median :       0   Median :   42812   Median :      435  
+##  Mean   :  -1286194   Mean   :   85928   Mean   :  466710   Mean   :   182474  
+##  3rd Qu.:    -11926   3rd Qu.:     132   3rd Qu.:  214218   3rd Qu.:    77392  
+##  Max.   :   1043473   Max.   :51722909   Max.   :58502000   Max.   :128941496  
+##  NA&#39;s   :1315         NA&#39;s   :1226       NA&#39;s   :1242       NA&#39;s   :778        
+##    Div.Tt.Lq           Div.Tt.Bruta         DivBr.Patr       
+##  Min.   :-123049000   Min.   :        0   Min.   :-42152.73  
+##  1st Qu.:       -21   1st Qu.:    52620   1st Qu.:     3.75  
+##  Median :    248743   Median :   537060   Median :    51.88  
+##  Mean   :   2559635   Mean   :  3986747   Mean   :   100.67  
+##  3rd Qu.:   1378054   3rd Qu.:  2422768   3rd Qu.:   112.16  
+##  Max.   : 391957000   Max.   :492849000   Max.   : 29428.89  
+##  NA&#39;s   :1049         NA&#39;s   :1049        NA&#39;s   :1050       
+##    EBIT.FinB          EV.EBITDA.emp             P.L           
+##  Min.   :-15022.467   Min.   :-17015.800   Min.   :-9318.389  
+##  1st Qu.:     0.230   1st Qu.:     4.369   1st Qu.:   -0.188  
+##  Median :     1.209   Median :     7.564   Median :    9.340  
+##  Mean   :     5.324   Mean   :    -0.079   Mean   :   12.215  
+##  3rd Qu.:     3.034   3rd Qu.:    11.908   3rd Qu.:   18.648  
+##  Max.   : 22421.889   Max.   :   620.351   Max.   : 5164.127  
+##  NA&#39;s   :1245         NA&#39;s   :1722         NA&#39;s   :1499       
+##  Liquidez_emBolsa   Negociabilidade  PresencaMedia         Beta3Anos      
+##  Min.   :0.000000   Min.   :0.0000   Min.   :      0.0   Min.   :-1.8240  
+##  1st Qu.:0.000000   1st Qu.:0.0004   1st Qu.:     20.1   1st Qu.: 0.3826  
+##  Median :0.000778   Median :0.0155   Median :    875.0   Median : 0.7179  
+##  Mean   :0.201097   Mean   :0.2820   Mean   :  28185.9   Mean   : 0.7896  
+##  3rd Qu.:0.106296   3rd Qu.:0.2345   3rd Qu.:  16972.8   3rd Qu.: 1.1039  
+##  Max.   :8.497231   Max.   :9.4828   Max.   :1705093.7   Max.   : 5.0408  
+##  NA&#39;s   :11         NA&#39;s   :1234     NA&#39;s   :1241        NA&#39;s   :1897     
+##  Retorno12meses           Ano               Nome_ano           Cod_ano         
+##  Min.   :  -95.823   Min.   :2010-12-31   Length:4202        Length:4202       
+##  1st Qu.:  -20.611   1st Qu.:2012-12-31   Class :character   Class :character  
+##  Median :    5.343   Median :2015-12-31   Mode  :character   Mode  :character  
+##  Mean   :   28.352   Mean   :2015-12-31                                        
+##  3rd Qu.:   37.185   3rd Qu.:2018-12-31                                        
+##  Max.   :30367.849   Max.   :2020-12-31                                        
+##  NA&#39;s   :1769</code></pre>
+<p>Análise de Correlação</p>
+<pre class="r"><code>#install.packages(&quot;corrplot&quot;)
+require(corrplot)
+## Carregando pacotes exigidos: corrplot
+## corrplot 0.84 loaded
+
+dadoscorr &lt;- listaDados %&gt;% select(Valor.Mercado,Patrim_Liq,Receita,RentAt,RenPat.med.,ImobilizadoTotal,Goodwill)
+dadoscorr &lt;- dadoscorr[complete.cases(dadoscorr),] 
+MatrCorDIS &lt;- cor(dadoscorr)
+par(mfrow=c(1,1))
+corrplot::corrplot(MatrCorDIS, method = &quot;number&quot;) #plot matrix</code></pre>
+<p><img src="/post/2021-03-18-importei-os-dados-e-agora/posimport.pt-br_files/figure-html/correl-1.png" width="672" /></p>
+<p>Gráficos</p>
+<pre class="r"><code>ggplot(data=listaDados) + geom_density(aes(x=Retorno12meses))
+## Warning: Removed 1769 rows containing non-finite values (stat_density).</code></pre>
+<p><img src="/post/2021-03-18-importei-os-dados-e-agora/posimport.pt-br_files/figure-html/AnaliseGrafica1-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado))
+## Warning: Removed 1419 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2021-03-18-importei-os-dados-e-agora/posimport.pt-br_files/figure-html/AnaliseGrafica2-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado)) + geom_smooth(aes(x=Patrim_Liq, y=Valor.Mercado), method=&quot;lm&quot;)
+## `geom_smooth()` using formula &#39;y ~ x&#39;
+## Warning: Removed 1419 rows containing non-finite values (stat_smooth).
+## Warning: Removed 1419 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2021-03-18-importei-os-dados-e-agora/posimport.pt-br_files/figure-html/AnaliseGrafica2_1-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado, color=Ano))
+## Warning: Removed 1419 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2021-03-18-importei-os-dados-e-agora/posimport.pt-br_files/figure-html/AnaliseGrafica3-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado)) + facet_wrap(~Ano)
+## Warning: Removed 1419 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2021-03-18-importei-os-dados-e-agora/posimport.pt-br_files/figure-html/AnaliseGrafica4-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado)) + geom_smooth(aes(x=Patrim_Liq, y=Valor.Mercado), method=&quot;lm&quot;)   + facet_wrap(~Ano)
+## `geom_smooth()` using formula &#39;y ~ x&#39;
+## Warning: Removed 1419 rows containing non-finite values (stat_smooth).
+## Warning: Removed 1419 rows containing missing values (geom_point).</code></pre>
+<p><img src="/post/2021-03-18-importei-os-dados-e-agora/posimport.pt-br_files/figure-html/AnaliseGrafica4_1-1.png" width="672" /></p>
+<p>Regressão Linear Simples</p>
+<pre class="r"><code>modelo1 &lt;- lm( Valor.Mercado ~ Patrim_Liq, data=listaDados)
+summary(modelo1)
+## 
+## Call:
+## lm(formula = Valor.Mercado ~ Patrim_Liq, data = listaDados)
+## 
+## Residuals:
+##        Min         1Q     Median         3Q        Max 
+## -243059773   -3699347   -3259310   -1353748  276168922 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 3.457e+06  4.011e+05   8.619   &lt;2e-16 ***
+## Patrim_Liq  1.189e+00  1.586e-02  74.944   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 20480000 on 2781 degrees of freedom
+##   (1419 observations deleted due to missingness)
+## Multiple R-squared:  0.6688, Adjusted R-squared:  0.6687 
+## F-statistic:  5617 on 1 and 2781 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>modelo2 &lt;- lm( Valor.Mercado ~ Patrim_Liq + RenPat.med., data=listaDados)
+summary(modelo2)
+## 
+## Call:
+## lm(formula = Valor.Mercado ~ Patrim_Liq + RenPat.med., data = listaDados)
+## 
+## Residuals:
+##        Min         1Q     Median         3Q        Max 
+## -240532776   -4477510   -3401021    -893906  275256645 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 3.205e+06  4.650e+05   6.892 6.98e-12 ***
+## Patrim_Liq  1.183e+00  1.687e-02  70.151  &lt; 2e-16 ***
+## RenPat.med. 8.549e+04  1.412e+04   6.056 1.61e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 21650000 on 2440 degrees of freedom
+##   (1759 observations deleted due to missingness)
+## Multiple R-squared:  0.6715, Adjusted R-squared:  0.6712 
+## F-statistic:  2494 on 2 and 2440 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>modelo3 &lt;- lm(Retorno12meses  ~  RenPat.med., data=listaDados)
+summary(modelo3)
+## 
+## Call:
+## lm(formula = Retorno12meses ~ RenPat.med., data = listaDados)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+##  -722.9   -53.9   -13.3    28.4 29962.2 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  47.1030    15.3041   3.078  0.00211 ** 
+## RenPat.med.  -2.2493     0.4828  -4.659 3.39e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 672.2 on 2030 degrees of freedom
+##   (2170 observations deleted due to missingness)
+## Multiple R-squared:  0.01058,    Adjusted R-squared:  0.01009 
+## F-statistic:  21.7 on 1 and 2030 DF,  p-value: 3.388e-06</code></pre>
+<p>No próximo post, tratamento dos dados, efeito de outliers e diagnóstico de modelos.</p>

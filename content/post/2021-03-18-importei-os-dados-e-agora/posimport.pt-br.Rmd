@@ -1,0 +1,169 @@
+---
+title: Importei os dados, e agora?
+author: R package build
+date: '2021-03-18'
+slug: posimport.pt-br
+categories: []
+tags: []
+keywords:
+  - tech
+---
+
+Após concluída a importação dos dados, no post anterior, nesse post realizamos diversas análises. 
+
+<!--more-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+library(GetDFPData)
+library(tidyquant)
+library(dplyr)
+library(readxl)
+library(writexl)
+library(stringr)
+library(tidyverse)
+library(rstudioapi)
+library(magrittr)
+library(tidyverse)
+library(ggplot2)
+library(dslabs)
+library(lubridate)
+require(zoo)
+library(BatchGetSymbols)
+#https://yihui.org/en/2018/07/embed-file/
+require(xfun)
+xfun::pkg_load2(c('base64enc', 'htmltools', 'mime'))
+
+library(knitr)
+library(kableExtra)
+
+```
+
+
+Se você tiver aberto uma nova seção, necessário carregar novamente os pacotes e definir novamente o diretório de trabalho. 
+```{r requirepackages, eval=FALSE}
+library(tidyverse)
+library(readxl)
+library(writexl)
+library(performance)
+library(lindia)
+library(plm)
+library(data.table)
+library(lubridate)
+
+require(rstudioapi)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+
+```
+
+
+Se precisar carregar novamente os dados
+```{r importando2, }
+
+
+nomes_colunas <- read_xlsx("colnames.xlsx",col_names = FALSE)
+arquivos <- list.files()
+arquivos <- arquivos[grepl("xlsx", arquivos)]
+arquivos <- arquivos[grepl("dados", arquivos)]
+
+#loop 
+for(i in 1:length(arquivos)) {
+  
+  d <- read_xlsx(arquivos[i],skip=3, col_names = make.names(nomes_colunas$...1))
+  d$Ano <- sub("^dados_", "31/12/", arquivos[i])
+  d$Ano <- sub(".xlsx", "", d$Ano)
+  d$Ano <- dmy(d$Ano)
+  d$Nome_ano <- paste(d$Nome, d$Ano, sep="_")
+  d$Cod_ano <- paste(d$Código, d$Ano, sep="_")
+  assign(sub(".xlsx", "", arquivos[i]),d)
+  rm(d)
+} 
+
+listaDados <- mget(ls(pattern = "^dados"))
+listaDados <- data.table::rbindlist(listaDados)
+rm(list = apropos("^dados"))
+
+```
+
+Convertendo caracteres para números.
+
+```{r convertendo, }
+listaDados <- suppressWarnings(listaDados %>% mutate_at(c(15:57), as.numeric))
+```
+
+
+Estatística descritiva básica:
+
+
+```{r descri1, }
+summary(listaDados)
+```
+
+Análise de Correlação
+
+```{r correl, }
+#install.packages("corrplot")
+require(corrplot)
+
+dadoscorr <- listaDados %>% select(Valor.Mercado,Patrim_Liq,Receita,RentAt,RenPat.med.,ImobilizadoTotal,Goodwill)
+dadoscorr <- dadoscorr[complete.cases(dadoscorr),] 
+MatrCorDIS <- cor(dadoscorr)
+par(mfrow=c(1,1))
+corrplot::corrplot(MatrCorDIS, method = "number") #plot matrix
+
+```
+
+Gráficos 
+
+```{r AnaliseGrafica1, }
+ggplot(data=listaDados) + geom_density(aes(x=Retorno12meses))
+```
+
+
+```{r AnaliseGrafica2, }
+ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado))
+```
+
+```{r AnaliseGrafica2_1, }
+ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado)) + geom_smooth(aes(x=Patrim_Liq, y=Valor.Mercado), method="lm")
+```
+
+```{r AnaliseGrafica3, }
+ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado, color=Ano))
+```
+
+```{r AnaliseGrafica4, }
+ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado)) + facet_wrap(~Ano)
+```
+
+```{r AnaliseGrafica4_1, }
+ggplot(data=listaDados) + geom_point(aes(x=Patrim_Liq, y=Valor.Mercado)) + geom_smooth(aes(x=Patrim_Liq, y=Valor.Mercado), method="lm")   + facet_wrap(~Ano)
+```
+
+
+
+Regressão Linear Simples
+
+```{r Modelo1, }
+modelo1 <- lm( Valor.Mercado ~ Patrim_Liq, data=listaDados)
+summary(modelo1)
+```
+
+```{r Modelo2, }
+modelo2 <- lm( Valor.Mercado ~ Patrim_Liq + RenPat.med., data=listaDados)
+summary(modelo2)
+```
+
+
+```{r Modelo3, }
+modelo3 <- lm(Retorno12meses  ~  RenPat.med., data=listaDados)
+summary(modelo3)
+```
+
+
+No próximo post, tratamento dos dados, efeito de outliers e diagnóstico de modelos. 
+

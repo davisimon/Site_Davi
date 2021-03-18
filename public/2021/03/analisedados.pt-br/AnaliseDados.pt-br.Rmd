@@ -1,0 +1,207 @@
+---
+title: Análise de Dados de empresas Brasileiras na B3
+author: R package build
+date: '2021-03-18'
+slug: AnaliseDados.pt-br
+categories:
+  - Finance
+  - R
+tags:
+  - tidyquant
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+library(GetDFPData)
+library(tidyquant)
+library(dplyr)
+library(readxl)
+library(writexl)
+library(stringr)
+library(tidyverse)
+library(rstudioapi)
+library(magrittr)
+library(tidyverse)
+library(ggplot2)
+library(dslabs)
+library(lubridate)
+require(zoo)
+library(BatchGetSymbols)
+#https://yihui.org/en/2018/07/embed-file/
+require(xfun)
+xfun::pkg_load2(c('base64enc', 'htmltools', 'mime'))
+
+library(knitr)
+library(kableExtra)
+
+```
+
+Nesse post, realizamos um conjunto de análises sobre dados de empresas Brasileiras de Capital aberto, com ações negociadas na B3.
+
+
+<!--more-->
+
+Instalação do R:
+https://cran.r-project.org/
+
+Instalação do R Studio:
+https://rstudio.com/products/rstudio/download/
+
+
+É necessário fazer o download dos dados, e escolher um diretório de trabalho para salvar esses dados e o script que será utilizado para tratar os dados. O script é um arquivo texto que conterá os comandos da análise, bem como comentários que possam ser úteis no futuro. Para criar um script, só acessar o menu *file*, opção *new file*, subopção *new script*. Posteriormente, deve-se salvar o script por meio do menu *File*, opção *Save as*, recomendando-se salvar no mesmo diretório onde serão incluídos os arquivos baixados.
+
+
+```{r links , echo=FALSE}
+xfun::embed_file("colnames.xlsx", text = "Colunas")
+```
+
+```{r links1 , echo=FALSE}
+xfun::embed_file("dados_2010.xlsx")
+```
+
+```{r links2 , echo=FALSE}
+xfun::embed_file("dados_2011.xlsx")
+```
+
+```{r links3 , echo=FALSE}
+xfun::embed_file("dados_2012.xlsx")
+```
+
+```{r links4 , echo=FALSE}
+xfun::embed_file("dados_2013.xlsx")
+```
+
+```{r links5 , echo=FALSE}
+xfun::embed_file("dados_2014.xlsx")
+```
+
+```{r links6 , echo=FALSE}
+xfun::embed_file("dados_2015.xlsx")
+```
+
+```{r links7 , echo=FALSE}
+xfun::embed_file("dados_2016.xlsx")
+```
+
+```{r links8 , echo=FALSE}
+xfun::embed_file("dados_2017.xlsx")
+```
+
+```{r links9 , echo=FALSE}
+xfun::embed_file("dados_2018.xlsx")
+```
+
+```{r links10 , echo=FALSE}
+xfun::embed_file("dados_2019.xlsx")
+```
+
+```{r links11 , echo=FALSE}
+xfun::embed_file("dados_2020.xlsx")
+```
+
+
+Próximo passo, após baixar os arquivos, é dizer para o R que ele deve trabalhar no diretório onde o script está salvo, junto com os dados.
+```{r directory, eval=FALSE}
+require(rstudioapi)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+```
+
+
+Na primeira vez que instalamos o R, é necessário instalar os diversos pacotes estatísticos que vamos utilizar em nossa análise. Essa instalação pode ser feita por meio do painel *Packages*, botão *Install*, ou por meio de código como o abaixo: 
+```{r installpackages, eval=FALSE}
+install.packages("tidyverse")
+install.packages("readxl")
+install.packages("writexl")
+install.packages("performance")
+install.packages("lindia")
+install.packages("plm")
+install.packages("data.table")
+install.packages("lubridate")
+```
+
+Depois de instalados, os pacotes precisam ser carregados em cada sessão de R (cada vez que abrimos o R Studio).
+
+```{r requirepackages, eval=FALSE}
+library(tidyverse)
+library(readxl)
+library(writexl)
+library(performance)
+library(lindia)
+library(plm)
+library(data.table)
+library(lubridate)
+```
+
+
+
+Importando os dados para o R:
+
+```{r criandoobjetos, }
+arquivos <- list.files()
+arquivos <- arquivos[grepl("xlsx", arquivos)]
+arquivos <- arquivos[grepl("dados", arquivos)]
+arquivos
+```
+
+Importando ium arquivo isoladamente, podemos inspecionar o objeto criado clicando nele no painel *Environment*
+
+```{r importando1, }
+dados_teste_2020 <- read_xlsx(arquivos[11],skip=3)
+```
+
+Os nomes das colunas estão bagunçados. Vamos aproveitar arquivo de excel colnames.xlsx para importar os nomes das colunas corretas
+```{r ajusteColunas, }
+colnames(dados_teste_2020)
+```
+
+
+```{r ajusteColunas1, }
+nomes_colunas <- read_xlsx("colnames.xlsx",col_names = FALSE)
+colnames(dados_teste_2020) <- make.names(nomes_colunas$...1)
+```
+
+
+Aqui já podemos utilizar o objeto.
+
+
+Próximo passo, importar todos os anos e criar um painel. 
+
+
+```{r importando2, }
+
+rm(dados_teste_2020)
+rm(nomes_colunas)
+rm(arquivos)
+
+nomes_colunas <- read_xlsx("colnames.xlsx",col_names = FALSE)
+arquivos <- list.files()
+arquivos <- arquivos[grepl("xlsx", arquivos)]
+arquivos <- arquivos[grepl("dados", arquivos)]
+
+ i <- 1
+ 
+#loop 
+for(i in 1:length(arquivos)) {
+  
+  d <- read_xlsx(arquivos[i],skip=3, col_names = make.names(nomes_colunas$...1))
+  d$Ano <- sub("^dados_", "31/12/", arquivos[i])
+  d$Ano <- sub(".xlsx", "", d$Ano)
+  d$Ano <- dmy(d$Ano)
+  d$Nome_ano <- paste(d$Nome, d$Ano, sep="_")
+  d$Cod_ano <- paste(d$Código, d$Ano, sep="_")
+  assign(sub(".xlsx", "", arquivos[i]),d)
+  rm(d)
+} 
+
+listaDados <- mget(ls(pattern = "^dados"))
+listaDados <- data.table::rbindlist(listaDados)
+rm(list = apropos("^dados"))
+
+```
+
+
+

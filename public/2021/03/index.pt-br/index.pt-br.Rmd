@@ -11,6 +11,8 @@ keywords:
   - tech
 ---
 
+Nesse post, calculamos o coeficiente Beta do modelo CAPM de empresas de capital aberto com a√ß√µes negociadas na B3.
+
 <!--more-->
 
 ```{r setup, include=FALSE}
@@ -26,20 +28,21 @@ library(readxl)
 ```
 
 
-ComeÁamos com o download dos tickers de empresas ativas em marÁo de 2021.
+Come√ßamos com o download dos tickers de empresas ativas em mar√ßo de 2021.
 
 ```{r echo=FALSE}
 # a single file
 xfun::embed_file('tickers.xlsx')
 ```
 
-A leitura dos tickers È feita com o comando read_excel, do pacote readxl <https://readxl.tidyverse.org/>
+A leitura dos tickers √© feita com o comando read_excel, do pacote readxl <https://readxl.tidyverse.org/>
 
 ```{r readxl, eval=FALSE}
 library(readxl)
 ```
 
-As aÁıes de empresas brasileiras s„o encontradas no *yahoofinance* com a adiÁ„o de ".SA" aos tickers. Ent„o, temos que adicionar esse sufixo ao nosso arquivo de tickers, criando a coluna codigo no dataframe *tickers* . 
+
+As a√ß√µes de empresas brasileiras s√£o encontradas no *yahoofinance* com a adi√ß√£o de ".SA" aos tickers. Ent√£o, temos que adicionar esse sufixo ao nosso arquivo de tickers, criando a coluna codigo no dataframe *tickers* . 
 
 ```{r tickers, eval=FALSE}
 tickers <- read_excel("tickers.xlsx", sheet=1, col_names = TRUE)
@@ -47,11 +50,11 @@ tickers$codigo <- paste(tickers$`unique(Dados$Codigo)`,".SA",sep="")
 lista <- tickers$codigo
 ```
 
-A funÁ„o *tq_get* do pacote tidyquant <https://cran.r-project.org/web/packages/tidyquant/index.html>, permite a obtenÁ„o de preÁos di·rios das aÁıes diretamente do <https://finance.yahoo.com/>, para todos os nossos tickerts. … um processo que pode demorar, dependendo da qualidade da conex„o com a internet.
-No mesmo bloco de cÛdigo, transformamos os preÁos di·rios em retornos logarÌtmicos ajustados, que s„o definidos da seguinte forma:
+A fun√ß√£o *tq_get* do pacote tidyquant <https://cran.r-project.org/web/packages/tidyquant/index.html>, permite a obten√ß√£o de pre√ßos di√°rios das a√ß√µes diretamente do <https://finance.yahoo.com/>, para todos os nossos tickerts. √â um processo que pode demorar, dependendo da qualidade da conex√£o com a internet.
+No mesmo bloco de c√≥digo, transformamos os pre√ßos di√°rios em retornos logar√≠tmicos ajustados, que s√£o definidos da seguinte forma:
 
 $$LogReturns = \log(\frac{P_{t}+Proventos}{P_{t-1}})$$
-O CÛdigo para obter as informaÁıes de preÁo ajustado das aÁıes que compıem nossa lista de tickers, bem como da Bovespa, est„o nos blocos abaixo:
+O C√≥digo para obter as informa√ß√µes de pre√ßo ajustado das a√ß√µes que comp√µem nossa lista de tickers, bem como da Bovespa, est√£o nos blocos abaixo:
 
 ```{r tidydplyr, eval=FALSE}
 library(tidyquant)
@@ -85,7 +88,7 @@ log_Rb <- "^BVSP" %>%
 ```
 
 
-Considerando que utilizaremos os dados para calcular os coeficientes betas das empresas brasileiras da B3, faremos a junÁ„o do objeto com os retornos das aÁıes com os objetos contendo os retornos do Ìndice IBOVESPA, usando a funÁ„o dplyr::left_join.
+Considerando que utilizaremos os dados para calcular os coeficientes betas das empresas brasileiras da B3, faremos a jun√ß√£o do objeto com os retornos das a√ß√µes com os objetos contendo os retornos do √≠ndice IBOVESPA, usando a fun√ß√£o dplyr::left_join.
 
 ```{r logretornos, eval=FALSE}
 log_Retornos_diarios_indice <- left_join(log_Retornos_diarios, log_Rb, by = c("date" = "date"))
@@ -96,13 +99,13 @@ log_Retornos_diarios_indice <-  readRDS("log_Retornos_diarios_indice.rds")
 ```
 
 
-Uma inspeÁ„o b·sica do objeto que contem todos os dados:
+Uma inspe√ß√£o b√°sica do objeto que contem todos os dados:
 ```{r inspect}
 head(log_Retornos_diarios_indice)
 ```
 
 
-EstatÌsticas b·sicas por ativo
+Estat√≠sticas b√°sicas por ativo
 ```{r keystats1}
 log_Retornos_diarios_indice  %>% 
       group_by(symbol) %>% 
@@ -114,18 +117,18 @@ log_Retornos_diarios_indice  %>%
 ```
 
 
-Salvamos o objeto gerado atÈ agora no formato rds, nativo do R, para utilizaÁ„o posterior.
+Salvamos o objeto gerado at√© agora no formato rds, nativo do R, para utiliza√ß√£o posterior.
 ```{r saveRDS, , eval=FALSE}
 saveRDS(log_Retornos_diarios_indice, "log_Retornos_diarios_indice.rds")
 ```
 
-Para abrir o objeto novamente, È sÛ usar o comando abaixo:
+Para abrir o objeto novamente, √© s√≥ usar o comando abaixo:
 ```{r readRDS,  eval=FALSE}
 log_Retornos_diarios_indice <-  readRDS("log_Retornos_diarios_indice.rds")
 ```
 
 
-Abaixo um exemplo de an·lise individual, utilizando as aÁıes preferenciais da Petrobras (PETR4)
+Abaixo um exemplo de an√°lise individual, utilizando as a√ß√µes preferenciais da Petrobras (PETR4)
 ```{r Petrobras}
 # Objeto com PETR4 
 sort(unique(log_Retornos_diarios_indice$symbol))
@@ -136,7 +139,7 @@ ggplot(petro) + geom_point(aes(x=Rb,y=Ra)) + geom_smooth(aes(x=Rb,y=Ra), method 
 ```
 
 
-Vamos gerar uma tabela com os coeficientes beta de todas as empresas que fazem parte da nossa lista, e exportar essas informaÁıes para o Excel
+Vamos gerar uma tabela com os coeficientes beta de todas as empresas que fazem parte da nossa lista, e exportar essas informa√ß√µes para o Excel
 
 
 #Tabela 
