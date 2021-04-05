@@ -29,10 +29,6 @@ library(readxl)
 ```
 
 
-
-A função *tq_get* do pacote tidyquant <https://cran.r-project.org/web/packages/tidyquant/index.html>, permite a obtenção de preços diários das ações diretamente do <https://finance.yahoo.com/>, para todos os nossos tickerts. É um processo que pode demorar, dependendo da qualidade da conexão com a internet.
-
-
 Lista de drogarias:
 http://bvmf.bmfbovespa.com.br/cias-listadas/empresas-listadas/BuscaEmpresaListada.aspx?segmento=Medicamentos+e+Outros+Produtos&idioma=pt-br
 
