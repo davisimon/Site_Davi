@@ -1,5 +1,5 @@
 ---
-title: Gestão de Carteiras de Investimento
+title: Carteiras de Investimento
 author: R package build
 date: '2021-04-06'
 slug: gestao_carteiras.pt-br
