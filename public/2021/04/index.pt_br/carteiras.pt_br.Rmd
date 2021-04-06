@@ -1,18 +1,17 @@
 ---
-title: Gestão de Carteiras de Investimento
+title: Carteiras
 author: R package build
 date: '2021-04-06'
-slug: gestao_carteiras.pt-br
+slug: carteiras.pt_br
 categories:
   - Finance
 tags:
-  - R Markdown
   - tidyquant
 keywords:
   - tech
 ---
 
-Neste post, um estudo sobre o conceito de diversificação no contexto de carteiras de investimento. 
+Neste post, apresenta-se um estudo sobre o conceito de diversificação no contexto de carteiras de investimento. 
 
 A referência principal é o livro citado abaixo:
 
@@ -234,7 +233,3 @@ corrplot(cor(returns[,2:6]), method="number")
 
 
 Uma questão que pode ocorrer é, se reduzimos o risco com uma combinação com peso igual para dois ativos, será que não poderíamos atingir uma redução ainda maior com outra proporção? E será que não poderíamos conseguir mais reduções de risco se adicionássemos mais ativos à carteira? 
-
-
-
-

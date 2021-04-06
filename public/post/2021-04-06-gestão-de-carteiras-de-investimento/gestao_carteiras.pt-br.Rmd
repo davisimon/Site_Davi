@@ -39,6 +39,7 @@ require(zoo)
 library(corrplot)
 require(timetk)
 library(scales)
+library(ggplot2)
 #https://yihui.org/en/2018/07/embed-file/
 require(xfun)
 xfun::pkg_load2(c('base64enc', 'htmltools', 'mime'))
@@ -59,6 +60,7 @@ library(tibbletime)
 library(timetk)
 library(corrplot)
 library(scales)
+library(ggplot2)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
 
@@ -108,13 +110,14 @@ write_xlsx(as.data.frame(returns),"retornos.xlsx")
 
 ```
 
+
 ```{r links2 , echo=FALSE}
 xfun::embed_file("retornos.xlsx")
 ```
 
 
 Visualizando os retornos dos ativos
-```{r visualreturns1}
+```{r vi1}
 
 asset_returns_long <- returns %>% gather(asset, returns, -date) %>% group_by(asset)
 asset_returns_long %>% ggplot(aes(x = returns, fill = asset)) +
@@ -122,7 +125,7 @@ asset_returns_long %>% ggplot(aes(x = returns, fill = asset)) +
                        ggtitle("Histograma de Retornos mensais desde 2018")
 ```
 
-```{r visualreturns2}
+```{r vi2}
 
 asset_returns_long %>% ggplot(aes(y = returns, x=date, color = asset)) +
                        geom_line() + 
@@ -130,7 +133,7 @@ asset_returns_long %>% ggplot(aes(y = returns, x=date, color = asset)) +
 ```
 
 
-```{r visualreturns3}
+```{r vi3}
 
 asset_returns_long %>% ggplot(aes(y = returns, x=date, color = asset)) +
                        geom_point() + 
