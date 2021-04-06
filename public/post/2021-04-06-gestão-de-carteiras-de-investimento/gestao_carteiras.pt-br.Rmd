@@ -81,7 +81,9 @@ prices <- suppressWarnings(getSymbols(symbols,
           reduce(merge) %>%
           `colnames<-`(symbols))
 write_xlsx(as.data.frame(prices),"preços.xlsx")
-
+```
+```{r links1 , echo=FALSE}
+xfun::embed_file("preços.xlsx")
 ```
 
 
@@ -102,8 +104,12 @@ returns <- suppressWarnings(
   slice(-1)
   )
 
-write_xlsx(as.data.frame(prices),"preços.xlsx")
+write_xlsx(as.data.frame(returns),"retornos.xlsx")
 
+```
+
+```{r links2 , echo=FALSE}
+xfun::embed_file("retornos.xlsx")
 ```
 
 
