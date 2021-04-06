@@ -1,0 +1,231 @@
+---
+title: Gestão de Carteiras de Investimento
+author: R package build
+date: '2021-04-06'
+slug: gestao_carteiras.pt-br
+categories:
+  - Finance
+tags:
+  - R Markdown
+  - tidyquant
+keywords:
+  - tech
+---
+
+Neste post, um estudo sobre o conceito de diversificação no contexto de carteiras de investimento. 
+
+A referência principal é o livro citado abaixo:
+
+Regenstein, Jr., Jonathan K.. Reproducible Finance with R: Code Flows and Shiny Apps for Portfolio Analysis (Chapman & Hall/CRC The R Series). CRC Press. Kindle Edition. 
+
+
+<!--more-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+library(tidyquant)
+library(dplyr)
+library(readxl)
+library(writexl)
+library(tidyverse)
+library(magrittr)
+library(ggplot2)
+library(lubridate)
+library(tibbletime)
+require(zoo)
+library(corrplot)
+require(timetk)
+library(scales)
+#https://yihui.org/en/2018/07/embed-file/
+require(xfun)
+xfun::pkg_load2(c('base64enc', 'htmltools', 'mime'))
+library(knitr)
+library(kableExtra)
+
+```
+
+Carga de pacotes básicos que serão utilizados na análise:
+
+```{r requirepackages, eval=FALSE}
+library(tidyverse)
+library(tidyquant)
+library(readxl)
+library(writexl)
+library(rstudioapi)
+library(tibbletime)
+library(timetk)
+library(corrplot)
+library(scales)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+
+```
+
+Definição dos ativos a considerar:
+
+```{r symbols}
+symbols <- c("PETR4.SA","MGLU3.SA", "VALE3.SA", "GGBR4.SA","ITUB4.SA")
+```
+
+
+Obtendo dados de preços dessas ações, e salvando para análise no excel
+
+```{r prices}
+prices <- suppressWarnings(getSymbols(symbols,
+                     src = 'yahoo',
+                     from = "2017-12-31", to = "2021-04-06",
+                     auto.assign = TRUE, warnings = FALSE) %>% map(~Ad(get(.))) %>% 
+          reduce(merge) %>%
+          `colnames<-`(symbols))
+write_xlsx(as.data.frame(prices),"preços.xlsx")
+
+```
+
+
+Calculando os retornos mensais:
+
+```{r returns}
+
+returns <- suppressWarnings(
+  prices %>%
+  tk_tbl(preserve_index = TRUE, rename_index = "date") %>% 
+  gather(asset, prices, -date) %>%
+  group_by(asset) %>% 
+  tq_transmute(mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log") %>%
+  spread(asset, monthly.returns) %>% 
+  select(date, symbols) %>% 
+  slice(-1)
+  )
+
+write_xlsx(as.data.frame(prices),"preços.xlsx")
+
+```
+
+
+Visualizando os retornos dos ativos
+```{r visualreturns1}
+
+asset_returns_long <- returns %>% gather(asset, returns, -date) %>% group_by(asset)
+asset_returns_long %>% ggplot(aes(x = returns, fill = asset)) +
+                       geom_histogram(alpha = 0.45, binwidth = .005) + 
+                       ggtitle("Histograma de Retornos mensais desde 2018")
+```
+
+```{r visualreturns2}
+
+asset_returns_long %>% ggplot(aes(y = returns, x=date, color = asset)) +
+                       geom_line() + 
+                       ggtitle("Retornos mensais desde 2018")
+```
+
+
+```{r visualreturns3}
+
+asset_returns_long %>% ggplot(aes(y = returns, x=date, color = asset)) +
+                       geom_point() + 
+                       ggtitle("Retornos mensais desde 2018") + facet_wrap(~asset)
+```
+
+
+
+Risco dos ativos
+
+Desvio padrão dos ativos individuais no período:
+
+```{r sdev1}
+sdevAtivos <- asset_returns_long %>%
+  group_by(asset) %>%
+  summarise( sd = sd(returns), retorno_medio_mensal = mean(returns))
+  
+sdevAtivos
+```
+
+
+
+Começamos com uma carteira composta pelos dois ativos com menos desvio padrão no período. Esses são os ativos cujas ações representaram a menor variação média de preços no período analisado.
+
+```{r pesos}
+w <- c(0, 0, 0.5, 0, 0.5) 
+```
+
+Checamos que os pesos estão corretamente alinhados 
+```{r pesos1}
+tibble(w, symbols)
+tibble(w, symbols) %>% summarise(total_weight = sum(w))
+```
+
+Usando o pacote tidyquant, começamos com o objeto formatado asset_returns_long, e podemos calcular os retornos de portfolios formados a partir desses ativos utilizando a função tq_portfolio(). Essa função parte de um objeto com retornos, e tem como input uma coluna que determina os ativos para o portfólio, uma coluna para encontrar os retornos e uma coluna para os pesos. A função também aceita o argumento rebalance_on = "months", que calcula automaticamente o rebalanceamento do portfolio para garantir que os pesos definidos se mantenham. 
+
+```{r portfolio1}
+
+portfolio_returns_tq_rebalanced_monthly <- asset_returns_long %>% 
+  tq_portfolio(assets_col = asset,
+               returns_col = returns, 
+               weights = w, 
+               col_rename = "returns", 
+               rebalance_on = "months") 
+
+```
+
+
+Visualizando os retornos do portfolio:
+
+```{r portfolio2}
+portfolio_returns_tq_rebalanced_monthly %>% 
+  ggplot(aes(x = date, y = returns)) + 
+  geom_point(colour = "cornflowerblue")+ 
+  xlab("date") + 
+  ylab("monthly return") + 
+  theme_update(plot.title = element_text(hjust = 0.5)) + 
+  ggtitle("Portfolio Returns Scatter") + 
+  scale_x_date(breaks = pretty_breaks(n=6))
+
+```
+
+
+```{r portfolio3}
+asset_returns_long %>% filter(asset%in%c("VALE3.SA","ITUB4.SA")) %>%  ggplot(aes(y = returns, x=date, color = asset)) +
+                       geom_point() + 
+                       ggtitle("Retornos mensais desde 2018") + facet_wrap(~asset)
+
+```
+
+Os retornos do portfolio são menos voláteis que os retornos dos ativos individuais. 
+
+
+```{r portfolio4}
+asset_returns_long %>% filter(asset%in%c("VALE3.SA","ITUB4.SA")) %>% 
+            ggplot(aes(x = returns, fill = asset)) + 
+            geom_histogram(alpha = 0.15, binwidth = .01) + 
+            geom_histogram(data = portfolio_returns_tq_rebalanced_monthly, 
+                           fill = "cornflowerblue", 
+                           binwidth = .01) + 
+            ggtitle("Retornos mensais do portfolio e dos ativos individuais") + 
+            theme_update(plot.title = element_text(hjust = 0.5))
+```
+
+
+```{r portfolio5}
+sd(portfolio_returns_tq_rebalanced_monthly$returns)
+```
+
+Comparando o desvio padrão do portfolio com o desvio padrão individual de ITUB4.SA (0.09333882) e VALE3.SA (0.07849913), notamos que o portfolio tem risco menor do que os riscos individuais dos ativos que o compõem. 
+
+Isso ocorre por conta da estrutura de correlação entre esses ativos. Coeficientes de correlação imperfeitos, que não dejam iguais a 1 ou -1, fazem com que seja possível diminuir o risco de uma carteira por conta de combinações entre ativos correlacionados. 
+
+
+```{r portfolio6}
+corrplot(cor(returns[,2:6]), method="number")
+```
+
+
+Uma questão que pode ocorrer é, se reduzimos o risco com uma combinação com peso igual para dois ativos, será que não poderíamos atingir uma redução ainda maior com outra proporção? E será que não poderíamos conseguir mais reduções de risco se adicionássemos mais ativos à carteira? 
+
+
+
+

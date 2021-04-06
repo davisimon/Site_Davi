@@ -6,11 +6,20 @@
     <description>Recent content in Tags on Davi Simon&#39;s blog and site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 09 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://davi-simon.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 06 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://davi-simon.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>R Markdown</title>
+      <link>https://davi-simon.netlify.com/tags/r-markdown/</link>
+      <pubDate>Tue, 06 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://davi-simon.netlify.com/tags/r-markdown/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>tidyquant</title>
       <link>https://davi-simon.netlify.com/tags/tidyquant/</link>
-      <pubDate>Tue, 09 Mar 2021 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 06 Apr 2021 00:00:00 +0000</pubDate>
       
       <guid>https://davi-simon.netlify.com/tags/tidyquant/</guid>
       <description></description>
@@ -31,15 +40,6 @@
       <pubDate>Tue, 24 Jul 2018 12:56:14 -0500</pubDate>
       
       <guid>https://davi-simon.netlify.com/tags/about/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>R Markdown</title>
-      <link>https://davi-simon.netlify.com/tags/r-markdown/</link>
-      <pubDate>Tue, 24 Jul 2018 12:56:14 -0500</pubDate>
-      
-      <guid>https://davi-simon.netlify.com/tags/r-markdown/</guid>
       <description></description>
     </item>
     

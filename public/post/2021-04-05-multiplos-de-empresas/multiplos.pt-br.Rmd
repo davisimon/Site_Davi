@@ -1,0 +1,148 @@
+---
+title: Multiplos de empresas
+author: R package build
+date: '2021-04-05'
+slug: multiplos.pt-br
+categories:
+  - Finance
+tags:
+  - tidyquant
+keywords:
+  - tech
+---
+
+Nesse post, exercício de análise de múltiplos de empresas de capital aberto negociadas na B3
+
+
+<!--more-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+require(tidyverse)
+library(tidyquant)
+library(writexl)
+library(kableExtra)
+library(readxl)
+```
+
+
+Lista de drogarias:
+http://bvmf.bmfbovespa.com.br/cias-listadas/empresas-listadas/BuscaEmpresaListada.aspx?segmento=Medicamentos+e+Outros+Produtos&idioma=pt-br
+
+Raia Drogasil S.A. (RADL3.SA) 	
+Dimed (PNVL3.SA)
+Biomm S.A. (BIOM3.SA)
+Profarma Distribuidora de Produtos Farmacêuticos S.A. (PFRM3.SA)
+d1000 Varejo Farma Participações S.A. (DMVF3.SA)
+Empreendimentos Pague Menos S.A. (PGMN3.SA)
+Hypera S.A. (HYPE3.SA)
+
+
+```{r tidydplyr, eval=FALSE}
+#Carga dos pacotes, que devem estar instalados por meio da opção "install packages", no menu Packages, do painel inferior direito.
+require(tidyverse)
+library(writexl)
+library(readxl)
+```
+
+Download de dados para análise de múltiplos
+```{r links1 , echo=FALSE}
+xfun::embed_file("Dados20102020.xlsx")
+```
+
+Importando dados para o R 
+```{r importando1, }
+dados <- read_xlsx("Dados20102020.xlsx")
+dados <- suppressWarnings(dados %>% mutate_at(c(15:57), as.numeric))
+lista2 <- c("RADL3","PNVL3","BIOM3","PFRM3", "DMVF3","PGMN3","HYPE3")
+dados <- dados %>% filter(Código %in% lista2)
+unique(dados$Código)
+
+```
+
+Criando os índices:
+```{r indices, }
+
+dados <- dados %>% mutate(EBITDA = EBIT + DeprAmor, 
+                          PrecoLucro = Valor.Mercado/Lucro.Liquido,
+                          EV_Sales = EnterpriseValue/Receita, 
+                          EV.EBITDA = EnterpriseValue/EBITDA)
+indices <- dados %>% select(Código,Ano,PrecoLucro,EV_Sales,EV.EBITDA)
+```
+
+Comparação dos índices
+```{r PrecoLucro, }
+ggplot(indices) + geom_line(aes(y=PrecoLucro,x=Ano, color=Código)) +   ylim(-20, 100)
+```
+
+```{r EVSales, }
+ggplot(indices) + geom_line(aes(y=EV_Sales ,x=Ano, color=Código)) + ylim(0, 10)
+```
+
+```{r EVEBITDA, }
+ggplot(indices) + geom_line(aes(y=EV.EBITDA ,x=Ano, color=Código)) + ylim(0, 60)
+```
+
+Exportando para o excel
+
+```{r exportando, }
+write_xlsx(indices,"indicesDrogarias.xlsx")
+```
+
+```{r links2 , echo=FALSE}
+xfun::embed_file("indicesDrogarias.xlsx")
+```
+
+
+
+Agora concorrentes da Lojas Americanas
+```{r importando2, }
+rm(dados)
+rm(indices)
+rm(lista2)
+dados <- read_xlsx("Dados20102020.xlsx")
+dados <- suppressWarnings(dados %>% mutate_at(c(15:57), as.numeric))
+lista3 <- c("MGLU3","VVAR3","LAME4","BTOW3","LJQQ3","","")
+dados <- dados %>% filter(Código %in% lista3)
+unique(dados$Código)
+```
+
+Criando os índices:
+```{r indices2, }
+
+dados <- dados %>% mutate(EBITDA = EBIT + DeprAmor, 
+                          PrecoLucro = Valor.Mercado/Lucro.Liquido,
+                          EV_Sales = EnterpriseValue/Receita, 
+                          EV.EBITDA = EnterpriseValue/EBITDA)
+indices <- dados %>% select(Código,Ano,PrecoLucro,EV_Sales,EV.EBITDA)
+```
+
+Comparação dos índices
+```{r PrecoLucro2, }
+ggplot(indices) + geom_line(aes(y=PrecoLucro,x=Ano, color=Código)) +   ylim(-100, 1000)
+```
+
+```{r EVSales2, }
+ggplot(indices) + geom_line(aes(y=EV_Sales ,x=Ano, color=Código)) + ylim(0, 10)
+```
+
+```{r EVEBITDA2, }
+ggplot(indices) + geom_line(aes(y=EV.EBITDA ,x=Ano, color=Código)) + ylim(0, 60)
+```
+
+Exportando para o excel
+
+```{r exportando2, }
+write_xlsx(indices,"indicesVarejo.xlsx")
+```
+
+```{r links3 , echo=FALSE}
+xfun::embed_file("indicesVarejo.xlsx")
+```
+
+
+
+
