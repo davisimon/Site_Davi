@@ -1,0 +1,127 @@
+---
+title: Carteiras
+author: R package build
+date: '2021-04-08'
+slug: carteiras
+categories:
+  - R
+  - Finance
+tags:
+  - tidyquant
+keywords:
+  - tech
+---
+
+
+Neste post, um estudo sobre o conceito de diversificação no contexto de carteiras de investimento. 
+
+A referência principal é o livro citado abaixo:
+
+Regenstein, Jr., Jonathan K.. Reproducible Finance with R: Code Flows and Shiny Apps for Portfolio Analysis (Chapman & Hall/CRC The R Series). CRC Press. Kindle Edition. 
+
+
+<!--more-->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+library(tidyquant)
+library(dplyr)
+library(readxl)
+library(writexl)
+library(tidyverse)
+library(magrittr)
+library(ggplot2)
+library(lubridate)
+library(tibbletime)
+require(zoo)
+library(corrplot)
+require(timetk)
+library(scales)
+library(ggplot2)
+#https://yihui.org/en/2018/07/embed-file/
+require(xfun)
+xfun::pkg_load2(c('base64enc', 'htmltools', 'mime'))
+library(knitr)
+library(kableExtra)
+
+```
+
+Carga de pacotes básicos que serão utilizados na análise:
+
+```{r requirepackages, eval=FALSE}
+library(tidyverse)
+library(tidyquant)
+library(readxl)
+library(writexl)
+library(rstudioapi)
+library(tibbletime)
+library(timetk)
+library(corrplot)
+library(scales)
+library(ggplot2)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+getwd()
+
+```
+
+Definição dos ativos a considerar:
+
+```{r symbols}
+symbols <- c("PETR4.SA","MGLU3.SA", "VALE3.SA", "GGBR4.SA","ITUB4.SA")
+```
+
+Obtendo dados de preços dessas ações, e salvando para análise no excel
+
+```{r prices}
+prices <- suppressWarnings(getSymbols(symbols,
+                     src = 'yahoo',
+                     from = "2017-12-31", to = "2021-04-06",
+                     auto.assign = TRUE, warnings = FALSE) %>% map(~Ad(get(.))) %>% 
+          reduce(merge) %>%
+          `colnames<-`(symbols))
+write_xlsx(as.data.frame(prices),"preços.xlsx")
+```
+```{r links1 , echo=FALSE}
+xfun::embed_file("preços.xlsx")
+```
+
+
+Calculando os retornos mensais:
+
+```{r returns}
+
+returns <- suppressWarnings(
+  prices %>%
+  tk_tbl(preserve_index = TRUE, rename_index = "date") %>% 
+  gather(asset, prices, -date) %>%
+  group_by(asset) %>% 
+  tq_transmute(mutate_fun = periodReturn,
+               period = "monthly",
+               type = "log") %>%
+  spread(asset, monthly.returns) %>% 
+  select(date, symbols) %>% 
+  slice(-1)
+  )
+
+write_xlsx(as.data.frame(returns),"retornos.xlsx")
+
+```
+
+
+```{r links2 , echo=FALSE}
+xfun::embed_file("retornos.xlsx")
+```
+
+Visualizando os retornos dos ativos
+```{r vi1}
+
+asset_returns_long <- returns %>% gather(asset, returns, -date) %>% group_by(asset)
+asset_returns_long %>% ggplot(aes(x = returns, fill = asset)) +
+                       geom_histogram(alpha = 0.45, binwidth = .005) + 
+                       ggtitle("Histograma de Retornos mensais desde 2018")
+```
+
+

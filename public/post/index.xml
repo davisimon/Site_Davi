@@ -6,7 +6,23 @@
     <description>Recent content in Posts on Davi Simon&#39;s blog and site</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 06 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://davi-simon.netlify.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 08 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://davi-simon.netlify.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Carteiras</title>
+      <link>https://davi-simon.netlify.com/2021/04/carteiras/</link>
+      <pubDate>Thu, 08 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://davi-simon.netlify.com/2021/04/carteiras/</guid>
+      <description>
+&lt;script src=&#34;https://davi-simon.netlify.com/rmarkdown-libs/header-attrs/header-attrs.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;Neste post, um estudo sobre o conceito de diversificação no contexto de carteiras de investimento.&lt;/p&gt;
+&lt;p&gt;A referência principal é o livro citado abaixo:&lt;/p&gt;
+&lt;p&gt;Regenstein, Jr., Jonathan K.. Reproducible Finance with R: Code Flows and Shiny Apps for Portfolio Analysis (Chapman &amp;amp; Hall/CRC The R Series). CRC Press. Kindle Edition.&lt;/p&gt;
+</description>
+    </item>
+    
     <item>
       <title>Carteiras de Investimento</title>
       <link>https://davi-simon.netlify.com/2021/04/gestao_carteiras.pt-br/</link>
