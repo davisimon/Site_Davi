@@ -17,15 +17,6 @@
     </item>
     
     <item>
-      <title>R Markdown</title>
-      <link>https://davi-simon.netlify.com/tags/r-markdown/</link>
-      <pubDate>Tue, 06 Apr 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://davi-simon.netlify.com/tags/r-markdown/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>lindia</title>
       <link>https://davi-simon.netlify.com/tags/lindia/</link>
       <pubDate>Tue, 09 Jul 2019 00:00:00 +0000</pubDate>
@@ -40,6 +31,15 @@
       <pubDate>Tue, 24 Jul 2018 12:56:14 -0500</pubDate>
       
       <guid>https://davi-simon.netlify.com/tags/about/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R Markdown</title>
+      <link>https://davi-simon.netlify.com/tags/r-markdown/</link>
+      <pubDate>Tue, 24 Jul 2018 12:56:14 -0500</pubDate>
+      
+      <guid>https://davi-simon.netlify.com/tags/r-markdown/</guid>
       <description></description>
     </item>
     
